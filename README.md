@@ -4,9 +4,9 @@ Official static marketing website for **VPSAgent** ("Give your AI agent a $5 VPS
 
 ## Files
 
-- `index.html` — Marketing page sections and interactive product demos
-- `styles.css` — Pure-black + emerald (`#10b981`) responsive styles
-- `main.js` — Subtle hero parallax, interactive 4-tab dashboard preview, approval simulator, and copy helpers
+- `index.html` — Marketing page sections, interactive 4-tab dashboard preview, MCP client workbench, and live action gate
+- `styles.css` — Deep obsidian-emerald architectural grid theme (`#050908` + `#10b981`) with responsive layout
+- `main.js` — Interactive 4-tab dashboard preview, MCP client snippet switcher, live safety gate simulator, and copy helpers
 - `favicon.svg` & `icons/` — Brand mark and supported AI MCP client logos
 - `share.jpg` — Open Graph social preview card
 - `Dockerfile`, `Caddyfile.container`, `docker-compose.yml` — Static container deployment setup (listens on port `8080`)
