@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-  // 1. Sticky header border on scroll
+  // 1. Sticky navbar background separation on scroll
   var nav = document.getElementById("site-nav");
   if (nav) {
     var updateNav = function () {
@@ -11,95 +11,53 @@
     window.addEventListener("scroll", updateNav, { passive: true });
   }
 
-  // 2. Hero floating parallax cards & terminal caret animation controller
-  function setupHeroMotion() {
-    var hero = document.querySelector(".hero");
-    var field = document.querySelector(".hero-float");
-    var caret = document.querySelector(".caret");
-    if (!hero || !field || typeof IntersectionObserver === "undefined") {
-      return;
-    }
+  // Clipboard helper
+  function copyText(text, labelEl, defaultText) {
+    var done = function () {
+      if (!labelEl) return;
+      labelEl.textContent = "Copied!";
+      setTimeout(function () {
+        labelEl.textContent = defaultText;
+      }, 1800);
+    };
 
-    var marks = Array.from(field.querySelectorAll(".hero-float-mark"));
-    var observed = caret ? marks.concat([caret]) : marks.slice();
-    var visible = new Set();
-    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    var finePointer = window.matchMedia("(pointer: fine)");
-    var rafId;
-    var pointerPos = null;
-
-    function isActive(el) {
-      return (
-        visible.has(el) &&
-        document.visibilityState === "visible" &&
-        !reducedMotion.matches
-      );
-    }
-
-    function canParallax() {
-      return finePointer.matches && marks.some(isActive);
-    }
-
-    function resetParallax() {
-      if (rafId !== undefined) {
-        cancelAnimationFrame(rafId);
-        rafId = undefined;
-      }
-      pointerPos = null;
-      field.style.setProperty("--px", "0px");
-      field.style.setProperty("--py", "0px");
-    }
-
-    function syncState() {
-      observed.forEach(function (el) {
-        el.style.setProperty("--home-motion-state", isActive(el) ? "running" : "paused");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () {
+        fallbackCopy(text);
+        done();
       });
-      var enabled = canParallax();
-      field.style.setProperty("--parallax-duration", enabled ? "0.7s" : "0s");
-      if (!enabled) {
-        resetParallax();
-      }
+    } else {
+      fallbackCopy(text);
+      done();
     }
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          visible.add(entry.target);
-        } else {
-          visible.delete(entry.target);
-        }
-      });
-      syncState();
-    });
-
-    observed.forEach(function (el) {
-      io.observe(el);
-    });
-
-    hero.addEventListener("pointermove", function (event) {
-      if (!canParallax()) return;
-      pointerPos = { x: event.clientX, y: event.clientY };
-      if (rafId !== undefined) return;
-      rafId = requestAnimationFrame(function () {
-        rafId = undefined;
-        if (!pointerPos || !canParallax()) return;
-        var rect = hero.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return;
-        var px = (((pointerPos.x - rect.left) / rect.width - 0.5) * 36).toFixed(1);
-        var py = (((pointerPos.y - rect.top) / rect.height - 0.5) * 28).toFixed(1);
-        field.style.setProperty("--px", px + "px");
-        field.style.setProperty("--py", py + "px");
-      });
-    });
-
-    hero.addEventListener("pointerleave", resetParallax);
-    document.addEventListener("visibilitychange", syncState);
-    reducedMotion.addEventListener("change", syncState);
-    finePointer.addEventListener("change", syncState);
-    syncState();
   }
 
-  setupHeroMotion();
+  function fallbackCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+    } catch (_) {
+      // Ignore fallback failures in restricted browsers
+    }
+    document.body.removeChild(ta);
+  }
+
+  // 2. Hero one-line install copy button
+  var ONE_LINE_INSTALL =
+    "curl -fsSL https://raw.githubusercontent.com/VPSAgent/vpsagent/main/bootstrap/install.sh | sudo bash";
+  var heroCopyBtn = document.getElementById("hero-copy-btn");
+  var heroCopyLabel = document.getElementById("hero-copy-label");
+  if (heroCopyBtn) {
+    heroCopyBtn.addEventListener("click", function () {
+      copyText(ONE_LINE_INSTALL, heroCopyLabel, "Copy");
+    });
+  }
 
   // 3. Interactive Dashboard Tab Switcher & Approval Demo
   var dashTabs = Array.from(document.querySelectorAll("[data-dash-tab]"));
@@ -148,7 +106,7 @@
       dashApprovalItem.style.borderColor = "";
       dashApprovalItem.style.borderLeftColor = "";
       dashApprovalMeta.style.color = "";
-      dashApprovalMeta.textContent = "PENDING · deploy_app · Claude Code (ask-first pass)";
+      dashApprovalMeta.textContent = "Pending · deploy_app · Claude Code (ask-first pass)";
       dashApprovalDesc.innerHTML =
         "Build <strong>analytics-api</strong> from Dockerfile, allocate isolated bridge network, bind <code>analytics.yourdomain.com</code>, and redact 4 secret env keys from logs.";
       dashApprovalActions.hidden = false;
@@ -160,7 +118,7 @@
       dashApprovalItem.style.borderColor = "rgba(16, 185, 129, 0.35)";
       dashApprovalItem.style.borderLeftColor = "#10b981";
       dashApprovalMeta.style.color = "#34d399";
-      dashApprovalMeta.textContent = "APPROVED · Executed via /run/vpsagent/runtime-bridge.sock";
+      dashApprovalMeta.textContent = "Approved · Executed via /run/vpsagent/runtime-bridge.sock";
       dashApprovalDesc.innerHTML =
         "<strong>analytics-api</strong> built cleanly and started with <code>cap_drop: ALL</code> on <code>https://analytics.yourdomain.com</code>.";
       dashApprovalActions.hidden = true;
@@ -172,7 +130,7 @@
       dashApprovalItem.style.borderColor = "rgba(251, 113, 133, 0.35)";
       dashApprovalItem.style.borderLeftColor = "#fb7185";
       dashApprovalMeta.style.color = "#fb7185";
-      dashApprovalMeta.textContent = "REJECTED · Blocked before container build";
+      dashApprovalMeta.textContent = "Rejected · Blocked before container build";
       dashApprovalDesc.innerHTML =
         "Denied <strong>analytics-api</strong> deployment request. No Docker image or Caddy route was modified.";
       dashApprovalActions.hidden = true;
@@ -199,68 +157,216 @@
     });
   }
 
-  // 4. Safety Wall Interactive Approval Card Simulator
-  var simHead = document.getElementById("sim-head");
-  var simStatus = document.getElementById("sim-status");
-  var simFootNote = document.getElementById("sim-foot-note");
-  var simApprove = document.getElementById("sim-approve");
-  var simReject = document.getElementById("sim-reject");
-  var simPill = document.getElementById("sim-pill");
-  var simPillLabel = document.getElementById("sim-pill-label");
-  var simState = "pending";
+  // 4. Interactive Remote MCP Client Workbench
+  var CLIENT_SNIPPETS = {
+    claude: {
+      file: "claude mcp add (terminal)",
+      transport: "Streamable HTTP (POST /mcp)",
+      code:
+        'claude mcp add --transport http vpsagent https://vps.yourdomain.com/mcp \\\n  --header "Authorization: Bearer vpsmcp_your_scoped_key"',
+    },
+    codex: {
+      file: "~/.codex/config.toml",
+      transport: "Remote HTTP MCP with Bearer token",
+      code:
+        '[mcp_servers.vpsagent]\nurl = "https://vps.yourdomain.com/mcp"\nbearer_token_env_var = "VPSAGENT_MCP_KEY"',
+    },
+    cursor: {
+      file: ".cursor/mcp.json",
+      transport: "Remote HTTP MCP JSON config",
+      code:
+        '{\n  "mcpServers": {\n    "vpsagent": {\n      "url": "https://vps.yourdomain.com/mcp",\n      "headers": {\n        "Authorization": "Bearer vpsmcp_your_scoped_key"\n      }\n    }\n  }\n}',
+    },
+    antigravity: {
+      file: "mcp_config.json",
+      transport: "Scoped visitor pass over HTTPS",
+      code:
+        '{\n  "mcpServers": {\n    "vpsagent": {\n      "serverUrl": "https://vps.yourdomain.com/mcp",\n      "headers": {\n        "Authorization": "Bearer vpsmcp_your_scoped_key"\n      }\n    }\n  }\n}',
+    },
+    opencode: {
+      file: "opencode.json",
+      transport: "Streamable HTTP remote server",
+      code:
+        '{\n  "mcp": {\n    "vpsagent": {\n      "type": "remote",\n      "url": "https://vps.yourdomain.com/mcp",\n      "headers": {\n        "Authorization": "Bearer vpsmcp_your_scoped_key"\n      }\n    }\n  }\n}',
+    },
+    any: {
+      file: "Standard MCP HTTP endpoint",
+      transport: "POST /mcp · JSON-RPC 2.0",
+      code:
+        'POST https://vps.yourdomain.com/mcp\nAuthorization: Bearer vpsmcp_your_scoped_key\nContent-Type: application/json',
+    },
+  };
 
-  function renderSim(next) {
-    simState = next;
-    if (!simHead || !simStatus || !simFootNote || !simPillLabel) return;
-    simHead.classList.remove("is-pending");
-    simStatus.classList.remove("is-ok", "is-rejected");
+  var currentClient = "claude";
+  var wbTabs = Array.from(document.querySelectorAll("[data-client]"));
+  var wbFile = document.getElementById("wb-file");
+  var wbCode = document.getElementById("wb-code");
+  var wbTransport = document.getElementById("wb-transport");
+  var wbCopyBtn = document.getElementById("wb-copy-btn");
+  var wbCopyLabel = document.getElementById("wb-copy-label");
 
-    if (next === "approved") {
-      simStatus.textContent = "Approved · Shipped via Runtime Bridge";
-      simStatus.classList.add("is-ok");
-      simFootNote.textContent = "Signed in SQLite WAL · Secrets redacted";
-      simPillLabel.textContent = "Deployed — click to reset preview";
-    } else if (next === "rejected") {
-      simStatus.textContent = "Rejected · Container not created";
-      simStatus.classList.add("is-rejected");
-      simFootNote.textContent = "Denied by owner · Bridge call skipped";
-      simPillLabel.textContent = "Blocked — click to reset preview";
-    } else {
-      simHead.classList.add("is-pending");
-      simStatus.textContent = "Waiting for approval";
-      simFootNote.textContent = "Audited in SQLite WAL";
-      simPillLabel.textContent = "Approve & deploy via Runtime Bridge";
+  wbTabs.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var id = btn.getAttribute("data-client");
+      if (!id || !CLIENT_SNIPPETS[id]) return;
+      currentClient = id;
+      wbTabs.forEach(function (t) {
+        t.setAttribute("aria-selected", t === btn ? "true" : "false");
+      });
+      var item = CLIENT_SNIPPETS[id];
+      if (wbFile) wbFile.textContent = item.file;
+      if (wbCode) wbCode.textContent = item.code;
+      if (wbTransport) wbTransport.textContent = item.transport;
+    });
+  });
+
+  if (wbCopyBtn) {
+    wbCopyBtn.addEventListener("click", function () {
+      copyText(CLIENT_SNIPPETS[currentClient].code, wbCopyLabel, "Copy snippet");
+    });
+  }
+
+  // 5. Interactive Action Gate Simulator
+  var GATE_SCENARIOS = {
+    deploy: {
+      title: "deploy_app · billing-api",
+      sub: "Requested by Claude Code · Scope: Ask Me First",
+      statusText: "Waiting for approval",
+      statusClass: "dash-status-cell--warn",
+      note: "Recorded in built-in SQLite WAL audit log",
+      interactive: true,
+      rows: [
+        ["Source", "github.com/acme/billing (Dockerfile build)"],
+        ["Container policy", "cap_drop: ALL · no-new-privileges · 0 docker.sock"],
+        ["Resource limits", "0.5 vCPU · 512m RAM · Private Postgres 16"],
+        ["Public route", "https://billing.yourdomain.com (Caddy Auto-TLS)"],
+      ],
+      approvedStatus: "Approved · Shipped via Runtime Bridge",
+      approvedNote: "Built & started on private bridge network",
+      rejectedStatus: "Rejected · Container not created",
+      rejectedNote: "Denied by owner · Bridge call skipped",
+    },
+    env: {
+      title: "update_app_env · api-billing",
+      sub: "Requested by Cursor · Scope: Ask Me First (app-locked)",
+      statusText: "Waiting for approval",
+      statusClass: "dash-status-cell--warn",
+      note: "Secret values are encrypted at rest and redacted in logs",
+      interactive: true,
+      rows: [
+        ["Target app", "api-billing (locked to visitor pass)"],
+        ["Updated keys", "STRIPE_WEBHOOK_SECRET=[REDACTED]"],
+        ["Storage", "Encrypted in node:sqlite (WAL mode)"],
+        ["MCP response", "Confirmation only, secret value never echoed"],
+      ],
+      approvedStatus: "Approved · Encrypted & reloaded",
+      approvedNote: "Container restarted cleanly with scrubbed logs",
+      rejectedStatus: "Rejected · Environment unchanged",
+      rejectedNote: "Existing encrypted secrets preserved",
+    },
+    blocked: {
+      title: "host_command · rm -rf /var/lib/docker",
+      sub: "Attempted over MCP · Blocked automatically before queue",
+      statusText: "Denied by bridge allowlist",
+      statusClass: "dash-status-cell--danger",
+      note: "Runtime Bridge rejects arbitrary shell commands by design",
+      interactive: false,
+      rows: [
+        ["Bridge socket", "/run/vpsagent/runtime-bridge.sock"],
+        ["Policy check", "Command not in strict allowlist"],
+        ["Docker socket", "Not mounted in core containers"],
+        ["Audit event", "Logged as blocked attempt with key prefix"],
+      ],
+    },
+  };
+
+  var activeScenario = "deploy";
+  var gateBtns = Array.from(document.querySelectorAll("[data-scenario]"));
+  var gateTitle = document.getElementById("gate-title");
+  var gateSub = document.getElementById("gate-sub");
+  var gateStatus = document.getElementById("gate-status");
+  var gateRows = document.getElementById("gate-rows");
+  var gateNote = document.getElementById("gate-note");
+  var gateActions = document.getElementById("gate-actions");
+  var gateApprove = document.getElementById("gate-approve");
+  var gateReject = document.getElementById("gate-reject");
+
+  function setStatusBadge(el, text, cls) {
+    if (!el) return;
+    el.textContent = text;
+    el.className = "dash-status-cell " + cls;
+  }
+
+  function renderScenario(id) {
+    var sc = GATE_SCENARIOS[id];
+    if (!sc) return;
+    activeScenario = id;
+
+    gateBtns.forEach(function (b) {
+      b.setAttribute("aria-selected", b.getAttribute("data-scenario") === id ? "true" : "false");
+    });
+
+    if (gateTitle) gateTitle.textContent = sc.title;
+    if (gateSub) gateSub.textContent = sc.sub;
+    setStatusBadge(gateStatus, sc.statusText, sc.statusClass);
+    if (gateNote) gateNote.textContent = sc.note;
+
+    if (gateRows) {
+      gateRows.innerHTML = "";
+      sc.rows.forEach(function (pair) {
+        var row = document.createElement("div");
+        row.className = "gate-row";
+        var label = document.createElement("span");
+        label.textContent = pair[0];
+        var val = document.createElement("code");
+        val.textContent = pair[1];
+        row.appendChild(label);
+        row.appendChild(val);
+        gateRows.appendChild(row);
+      });
+    }
+
+    if (gateActions) {
+      gateActions.hidden = !sc.interactive;
     }
   }
 
-  if (simApprove) {
-    simApprove.addEventListener("click", function () {
-      renderSim("approved");
+  gateBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var id = btn.getAttribute("data-scenario");
+      if (id) renderScenario(id);
     });
-  }
-  if (simReject) {
-    simReject.addEventListener("click", function () {
-      renderSim("rejected");
-    });
-  }
-  if (simPill) {
-    simPill.addEventListener("click", function () {
-      renderSim(simState === "pending" ? "approved" : "pending");
+  });
+
+  if (gateApprove) {
+    gateApprove.addEventListener("click", function () {
+      var sc = GATE_SCENARIOS[activeScenario];
+      if (!sc || !sc.interactive) return;
+      setStatusBadge(gateStatus, sc.approvedStatus, "dash-status-cell--ok");
+      if (gateNote) gateNote.textContent = sc.approvedNote;
     });
   }
 
-  // 5. Ubuntu Install Terminal Switcher & Copy Helpers
+  if (gateReject) {
+    gateReject.addEventListener("click", function () {
+      var sc = GATE_SCENARIOS[activeScenario];
+      if (!sc || !sc.interactive) return;
+      setStatusBadge(gateStatus, sc.rejectedStatus, "dash-status-cell--danger");
+      if (gateNote) gateNote.textContent = sc.rejectedNote;
+    });
+  }
+
+  // 6. Ubuntu Install Terminal Switcher & Copy Helper
   var INSTALL_CMDS = {
-    curl: "curl -fsSL https://raw.githubusercontent.com/VPSAgent/vpsagent/main/bootstrap/install.sh | sudo bash",
+    curl: ONE_LINE_INSTALL,
     git: 'git clone https://github.com/VPSAgent/vpsagent.git "$HOME/vpsagent" && sudo bash "$HOME/vpsagent/bootstrap/install.sh"',
+    tunnel: "ssh -N -L 3002:127.0.0.1:3002 ubuntu@YOUR_VPS_IP",
   };
   var currentMode = "curl";
   var termCmd = document.getElementById("term-cmd");
   var modeBtns = Array.from(document.querySelectorAll("[data-install-mode]"));
   var termCopyBtn = document.getElementById("term-copy-btn");
   var termCopyLabel = document.getElementById("term-copy-label");
-  var pitchCopyBtn = document.getElementById("pitch-copy-btn");
-  var pitchCopyLabel = document.getElementById("pitch-copy-label");
 
   modeBtns.forEach(function (btn) {
     btn.addEventListener("click", function () {
@@ -268,7 +374,7 @@
       if (!mode || !INSTALL_CMDS[mode]) return;
       currentMode = mode;
       modeBtns.forEach(function (b) {
-        b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+        b.setAttribute("aria-selected", b === btn ? "true" : "false");
       });
       if (termCmd) {
         termCmd.textContent = INSTALL_CMDS[mode];
@@ -276,51 +382,9 @@
     });
   });
 
-  function copyInstall(labelEl, defaultText) {
-    var text = INSTALL_CMDS[currentMode];
-    var done = function () {
-      if (!labelEl) return;
-      labelEl.textContent = "Copied!";
-      setTimeout(function () {
-        labelEl.textContent = defaultText;
-      }, 1800);
-    };
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(done, function () {
-        fallbackCopy(text);
-        done();
-      });
-    } else {
-      fallbackCopy(text);
-      done();
-    }
-  }
-
-  function fallbackCopy(text) {
-    var ta = document.createElement("textarea");
-    ta.value = text;
-    ta.setAttribute("readonly", "");
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand("copy");
-    } catch (_) {
-      // Ignore fallback failures in restricted browsers
-    }
-    document.body.removeChild(ta);
-  }
-
   if (termCopyBtn) {
     termCopyBtn.addEventListener("click", function () {
-      copyInstall(termCopyLabel, "Copy");
-    });
-  }
-  if (pitchCopyBtn) {
-    pitchCopyBtn.addEventListener("click", function () {
-      copyInstall(pitchCopyLabel, "Copy install command");
+      copyText(INSTALL_CMDS[currentMode], termCopyLabel, "Copy command");
     });
   }
 })();
