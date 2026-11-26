@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-  // 1. Sticky navbar background separation on scroll + mobile menu close on anchor click
+  // 1. Sticky navbar background separation on scroll
   var nav = document.getElementById("site-nav");
   if (nav) {
     var updateNav = function () {
@@ -9,15 +9,6 @@
     };
     updateNav();
     window.addEventListener("scroll", updateNav, { passive: true });
-
-    var navMenu = nav.querySelector(".nav-menu");
-    if (navMenu) {
-      Array.from(navMenu.querySelectorAll("a")).forEach(function (link) {
-        link.addEventListener("click", function () {
-          navMenu.removeAttribute("open");
-        });
-      });
-    }
   }
 
   // Clipboard helper
@@ -57,7 +48,7 @@
     document.body.removeChild(ta);
   }
 
-  // Shared ARIA tabs helper (roving tabindex + ArrowLeft/ArrowRight/Home/End)
+  // Shared ARIA tabs helper (roving tabindex + Arrow keys + Home/End)
   function initTabs(listEl, onSelect) {
     if (!listEl) return null;
     var tabs = Array.from(listEl.querySelectorAll('[role="tab"]'));
@@ -115,7 +106,6 @@
   }
 
   // 2. Hero one-line install copy button
-  // TODO(diego): switch to the v2.0.0-alpha.1 tag URL once the tag exists and install.sh defaults VPSAGENT_REPO_REF to it
   var ONE_LINE_INSTALL =
     "curl -fsSL https://raw.githubusercontent.com/VPSAgent/vpsagent/main/bootstrap/install.sh | sudo bash";
   var heroCopyBtn = document.getElementById("hero-copy-btn");
@@ -124,29 +114,6 @@
     heroCopyBtn.addEventListener("click", function () {
       copyText(ONE_LINE_INSTALL, heroCopyLabel, "Copy");
     });
-  }
-
-  // 2b. Overview panel agent activity line (runs once on load; static when reduced motion)
-  var activityEl = document.getElementById("dash-activity-text");
-  var reduceMotion =
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var activityTimers = [];
-  function clearActivityTimers() {
-    while (activityTimers.length) clearTimeout(activityTimers.pop());
-  }
-  if (activityEl && !reduceMotion) {
-    activityEl.textContent = "deploy_app(analytics-api)";
-    activityTimers.push(
-      setTimeout(function () {
-        activityEl.textContent = "deploy_app(analytics-api) → building…";
-      }, 900)
-    );
-    activityTimers.push(
-      setTimeout(function () {
-        activityEl.textContent =
-          "deploy_app(analytics-api) → live at https://analytics.yourdomain.com";
-      }, 2100)
-    );
   }
 
   // 3. Interactive Dashboard Tab Switcher & Approval Demo
@@ -186,51 +153,38 @@
     ) {
       return;
     }
-    clearActivityTimers();
     if (state === "pending") {
-      dashApprovalItem.style.borderColor = "";
-      dashApprovalItem.style.borderLeftColor = "";
-      dashApprovalMeta.style.color = "";
-      dashApprovalMeta.textContent = "Pending · deploy_app · Claude Code (Ask Me First)";
+      dashApprovalItem.classList.remove("is-approved", "is-rejected");
+      dashApprovalMeta.textContent = "Pending · deploy_app · Claude Code (ask-first pass)";
       dashApprovalDesc.innerHTML =
-        "Build <strong>analytics-api</strong> from its Dockerfile, add a private Postgres 16, and serve it on <code>analytics.yourdomain.com</code>.";
+        "Build <strong>analytics-api</strong> from Dockerfile, allocate isolated bridge network, bind <code>analytics.yourdomain.com</code>, and redact 4 secret env keys from logs.";
       dashApprovalActions.hidden = false;
       dashBadge.textContent = "1";
       dashBadge.classList.remove("is-zero");
       dashResetDemo.hidden = true;
       if (dashOverviewAlert) dashOverviewAlert.hidden = false;
-      if (activityEl) activityEl.textContent = "deploy_app(analytics-api) → waiting for approval";
     } else if (state === "approved") {
-      dashApprovalItem.style.borderColor = "rgba(16, 185, 129, 0.35)";
-      dashApprovalItem.style.borderLeftColor = "#10b981";
-      dashApprovalMeta.style.color = "#34d399";
-      dashApprovalMeta.textContent = "Approved · Deploy started";
+      dashApprovalItem.classList.remove("is-rejected");
+      dashApprovalItem.classList.add("is-approved");
+      dashApprovalMeta.textContent = "Approved · Executed via /run/vpsagent/runtime-bridge.sock";
       dashApprovalDesc.innerHTML =
-        "<strong>analytics-api</strong> is live on <code>https://analytics.yourdomain.com</code>.";
+        "<strong>analytics-api</strong> built cleanly and started with <code>cap_drop: ALL</code> on <code>https://analytics.yourdomain.com</code>.";
       dashApprovalActions.hidden = true;
       dashBadge.textContent = "0";
       dashBadge.classList.add("is-zero");
       dashResetDemo.hidden = false;
       if (dashOverviewAlert) dashOverviewAlert.hidden = true;
-      if (activityEl) {
-        activityEl.textContent =
-          "deploy_app(analytics-api) → live at https://analytics.yourdomain.com";
-      }
     } else if (state === "rejected") {
-      dashApprovalItem.style.borderColor = "rgba(251, 113, 133, 0.35)";
-      dashApprovalItem.style.borderLeftColor = "#fb7185";
-      dashApprovalMeta.style.color = "#fb7185";
-      dashApprovalMeta.textContent = "Rejected · Nothing was changed";
+      dashApprovalItem.classList.remove("is-approved");
+      dashApprovalItem.classList.add("is-rejected");
+      dashApprovalMeta.textContent = "Rejected · Blocked before container build";
       dashApprovalDesc.innerHTML =
-        "Rejected <strong>analytics-api</strong> deployment request. Nothing was changed.";
+        "Denied <strong>analytics-api</strong> deployment request. No Docker image or Caddy route was modified.";
       dashApprovalActions.hidden = true;
       dashBadge.textContent = "0";
       dashBadge.classList.add("is-zero");
       dashResetDemo.hidden = false;
       if (dashOverviewAlert) dashOverviewAlert.hidden = true;
-      if (activityEl) {
-        activityEl.textContent = "deploy_app(analytics-api) → rejected · nothing was changed";
-      }
     }
   }
 
@@ -247,23 +201,6 @@
   if (dashResetDemo) {
     dashResetDemo.addEventListener("click", function () {
       setDashApprovalState("pending");
-    });
-  }
-
-  // 3b. Demo slot click-to-load YouTube embed
-  var demoSlot = document.querySelector(".demo-slot");
-  var ytId = demoSlot ? (demoSlot.getAttribute("data-youtube-id") || "").trim() : "";
-  if (demoSlot && ytId) {
-    demoSlot.innerHTML =
-      '<button type="button" class="demo-poster-btn" aria-label="Play demo video">' +
-      '<img class="demo-poster" src="https://i.ytimg.com/vi/' + encodeURIComponent(ytId) + '/hqdefault.jpg" alt="" loading="lazy" />' +
-      '<span class="demo-poster-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14l11-7-11-7z"/></svg></span>' +
-      "</button>";
-    demoSlot.querySelector(".demo-poster-btn").addEventListener("click", function () {
-      demoSlot.innerHTML =
-        '<iframe class="demo-iframe" src="https://www.youtube-nocookie.com/embed/' +
-        encodeURIComponent(ytId) +
-        '?autoplay=1" title="VPSAgent demo video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
     });
   }
 
@@ -334,25 +271,25 @@
   var GATE_SCENARIOS = {
     deploy: {
       title: "deploy_app · billing-api",
-      sub: "Requested by Claude Code · Pass: Ask Me First",
+      sub: "Requested by Claude Code · Scope: Ask Me First",
       statusText: "Waiting for approval",
       statusClass: "dash-status-cell--warn",
       note: "Recorded in built-in SQLite WAL audit log",
       interactive: true,
       rows: [
         ["Source", "github.com/acme/billing (Dockerfile build)"],
-        ["Resources", "0.5 vCPU · 512 MB RAM"],
-        ["Database", "Private Postgres 16"],
+        ["Container policy", "cap_drop: ALL · no-new-privileges · 0 docker.sock"],
+        ["Resource limits", "0.5 vCPU · 512m RAM · Private Postgres 16"],
         ["Public route", "https://billing.yourdomain.com (Caddy Auto-TLS)"],
       ],
-      approvedStatus: "Approved · Deploying",
-      approvedNote: "Your agent gets the live URL when it's up",
-      rejectedStatus: "Rejected · Not deployed",
-      rejectedNote: "Rejected by you · Your agent is told why",
+      approvedStatus: "Approved · Shipped via Runtime Bridge",
+      approvedNote: "Built & started on private bridge network",
+      rejectedStatus: "Rejected · Container not created",
+      rejectedNote: "Denied by owner · Bridge call skipped",
     },
     env: {
       title: "update_app_env · api-billing",
-      sub: "Requested by Cursor · Pass: Ask Me First (app-locked)",
+      sub: "Requested by Cursor · Scope: Ask Me First (app-locked)",
       statusText: "Waiting for approval",
       statusClass: "dash-status-cell--warn",
       note: "Secret values are encrypted at rest and redacted in logs",
@@ -360,7 +297,7 @@
       rows: [
         ["Target app", "api-billing (locked to visitor pass)"],
         ["Updated keys", "STRIPE_WEBHOOK_SECRET=[REDACTED]"],
-        ["Storage", "Encrypted at rest"],
+        ["Storage", "Encrypted in node:sqlite (WAL mode)"],
         ["MCP response", "Confirmation only, secret value never echoed"],
       ],
       approvedStatus: "Approved · Encrypted & reloaded",
@@ -368,23 +305,19 @@
       rejectedStatus: "Rejected · Environment unchanged",
       rejectedNote: "Existing encrypted secrets preserved",
     },
-    host: {
-      title: "run_host_command · apt list --upgradable",
-      sub: "Requested by Claude Code · Pass: Ask Me First",
-      statusText: "Waiting for your OK",
-      statusClass: "dash-status-cell--warn",
-      note: "Server commands wait for you on every pass except Full Server Admin",
-      interactive: true,
+    blocked: {
+      title: "host_command · rm -rf /var/lib/docker",
+      sub: "Attempted over MCP · Blocked automatically before queue",
+      statusText: "Denied by bridge allowlist",
+      statusClass: "dash-status-cell--danger",
+      note: "Runtime Bridge rejects arbitrary shell commands by design",
+      interactive: false,
       rows: [
-        ["Command", "apt list --upgradable"],
-        ["Runs on", "Your VPS host"],
-        ["Output", "Returned to your agent and saved in history"],
-        ["Timeout", "30 s (max 180 s)"],
+        ["Bridge socket", "/run/vpsagent/runtime-bridge.sock"],
+        ["Policy check", "Command not in strict allowlist"],
+        ["Docker socket", "Not mounted in core containers"],
+        ["Audit event", "Logged as blocked attempt with key prefix"],
       ],
-      approvedStatus: "Approved · Ran on host",
-      approvedNote: "Output sent back to Claude Code",
-      rejectedStatus: "Rejected · Not run",
-      rejectedNote: "Your agent is told you said no",
     },
   };
 

@@ -3,59 +3,55 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>VPSAgent | Your coding agent's own VPS</title>
+    <title>VPSAgent | Give your AI agent a $5 VPS, safely.</title>
     <meta
       name="description"
-      content="Install VPSAgent on any Ubuntu VPS, paste one MCP link into Claude Code, Codex or Cursor, and your agent deploys real apps with domains, HTTPS and databases. Open source, free on every server."
+      content="Self-hosted VPS control plane and Remote MCP Gateway. Connect Claude Code, Codex, Cursor, Antigravity, OpenCode, or Grok to deploy isolated apps without root SSH keys or Docker socket exposure."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://vpsagent.sgdev.es/" />
-    <meta property="og:title" content="VPSAgent: Your coding agent's own VPS" />
+    <meta property="og:title" content="VPSAgent | Give your AI agent a $5 VPS, safely." />
     <meta
       property="og:description"
-      content="Install VPSAgent on any Ubuntu VPS, paste one MCP link into Claude Code, Codex or Cursor, and your agent deploys real apps with domains, HTTPS and databases. Open source, free on every server."
+      content="Let your existing AI agent deploy and manage isolated Docker apps on an Ubuntu VPS with human approvals and zero root Docker socket access."
     />
-    <!-- TODO(diego): regenerate share.jpg with the new hero; current image shows old copy -->
-    <meta property="og:image" content="https://vpsagent.sgdev.es/share.jpg" />
+    <meta property="og:image" content="share.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="VPSAgent: Your coding agent's own VPS" />
+    <meta name="twitter:title" content="VPSAgent | Give your AI agent a $5 VPS, safely." />
     <meta
       name="twitter:description"
-      content="Install VPSAgent on any Ubuntu VPS, paste one MCP link into Claude Code, Codex or Cursor, and your agent deploys real apps with domains, HTTPS and databases. Open source, free on every server."
+      content="Self-hosted control plane and Remote MCP Gateway for Ubuntu VPSs. GNU AGPL-3.0 open source."
     />
-    <meta name="twitter:image" content="https://vpsagent.sgdev.es/share.jpg" />
-    <meta name="theme-color" content="#050908" />
-    <link rel="canonical" href="https://vpsagent.sgdev.es/" />
+    <meta name="twitter:image" content="share.jpg" />
+    <meta name="theme-color" content="#0b0b0b" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/space-grotesk-700.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/ibm-plex-sans-600.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/saira-semi-condensed-600.woff2" />
     <link rel="stylesheet" href="styles.css" />
     <script src="main.js" defer></script>
   </head>
   <body>
     <div class="bg-grid" aria-hidden="true"></div>
-    <div class="bg-glow" aria-hidden="true"></div>
 
     <div class="page">
       <header class="nav" id="site-nav">
         <div class="nav-inner">
-          <div class="nav-left">
-            <a href="#top" class="nav-brand">
-              <span class="nav-brand-mark" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="5 7 11 12 5 17" />
-                  <line x1="13" y1="17" x2="19" y2="17" />
-                </svg>
-              </span>
-              <span class="nav-brand-name">VPSAgent</span>
-            </a>
-            <span class="pill-alpha">alpha</span>
-          </div>
+          <a href="#top" class="nav-brand" aria-label="VPSAgent home">
+            <img
+              src="icons/vpsagent-mark.svg"
+              alt=""
+              width="23"
+              height="24"
+              class="brand-mark brand-mark--nav"
+              aria-hidden="true"
+            />
+            <span class="nav-brand-name">VPSAGENT</span>
+          </a>
 
           <nav class="nav-right" aria-label="Primary">
-            <a href="#how" class="nav-link">How it works</a>
             <a href="#clients" class="nav-link">Clients</a>
+            <a href="#security" class="nav-link">Approvals</a>
+            <a href="#isolation" class="nav-link">Isolation</a>
             <a href="#install" class="nav-link">Install</a>
-            <a href="#next" class="nav-link">What's next</a>
             <a
               href="https://github.com/VPSAgent/vpsagent"
               target="_blank"
@@ -68,41 +64,25 @@
               </svg>
               <span>GitHub</span>
             </a>
-            <a href="#early-access" class="btn btn-primary nav-cta">Get early access</a>
-            <details class="nav-menu">
-              <summary aria-label="Menu">Menu</summary>
-              <div class="nav-menu-panel">
-                <a href="#how">How it works</a>
-                <a href="#clients">Clients</a>
-                <a href="#install">Install</a>
-                <a href="#next">What's next</a>
-                <a href="https://github.com/VPSAgent/vpsagent" target="_blank" rel="noopener noreferrer">GitHub</a>
-              </div>
-            </details>
+            <a href="#install" class="btn btn-primary nav-cta">Install on Ubuntu</a>
           </nav>
         </div>
       </header>
 
       <main class="main" id="top">
-        <!-- 1. Hero + Interactive 4-Tab VPSAgent Control Panel Showcase -->
+        <!-- 1. Hero + Interactive 4-Tab VPSAgent Control Plane Showcase -->
         <section class="hero">
           <div class="container hero-inner">
-            <p class="pill-eyebrow" data-rise style="--d: 0.02s">Alpha · Open source (AGPL-3.0) · Free on every server</p>
+            <h1 class="display hero-title" data-rise style="--d: 0.04s">
+              Give your AI agent a $5 VPS, safely.
+            </h1>
 
-            <h1 class="display hero-title" data-rise style="--d: 0.06s">Your coding agent's own VPS.</h1>
-
-            <p class="hero-tagline" data-rise style="--d: 0.1s">Paste one link into Claude Code, and it deploys.</p>
-
-            <p class="hero-sub" data-rise style="--d: 0.14s">
-              Install VPSAgent on any Ubuntu VPS. Connect Claude Code, Codex, Cursor, Antigravity or OpenCode with one MCP link, then just ask: <em>deploy this repo to app.mydomain.com</em>. Your agent builds it, routes HTTPS, adds a database and reads the logs. You approve the big moves.
+            <p class="hero-sub" data-rise style="--d: 0.1s">
+              Connect Claude Code, Codex, Cursor, or Antigravity to your Ubuntu server over a scoped HTTPS URL, with human approvals and zero Docker socket access.
             </p>
 
-            <div class="hero-actions" data-rise style="--d: 0.18s">
-              <div class="hero-cta-row">
-                <a href="#install" class="btn btn-primary btn-lg">Install on Ubuntu</a>
-                <a href="#early-access" class="btn btn-ghost btn-lg">Get early access</a>
-              </div>
-              <!-- TODO(diego): switch to the v2.0.0-alpha.1 tag URL once the tag exists and install.sh defaults VPSAGENT_REPO_REF to it -->
+            <div class="hero-actions" data-rise style="--d: 0.16s">
+              <a href="#install" class="btn btn-primary btn-lg">Install on Ubuntu</a>
               <button type="button" class="hero-cmd-copy" id="hero-copy-btn" aria-label="Copy one-line Ubuntu install command">
                 <span class="hero-cmd-prompt" aria-hidden="true">$</span>
                 <code class="hero-cmd-text">curl -fsSL https://raw.githubusercontent.com/VPSAgent/vpsagent/main/bootstrap/install.sh | sudo bash</code>
@@ -110,23 +90,8 @@
               </button>
             </div>
 
-            <p class="hero-clients" data-rise style="--d: 0.21s">
-              <span class="hero-clients-lead">Works with</span>
-              <span class="hero-client-item"><img src="icons/claude.svg" alt="" width="18" height="18" />Claude Code</span>
-              <span class="hero-client-sep" aria-hidden="true">·</span>
-              <span class="hero-client-item"><img src="icons/openai.svg" alt="" width="18" height="18" />Codex</span>
-              <span class="hero-client-sep" aria-hidden="true">·</span>
-              <span class="hero-client-item"><img src="icons/cursor.svg" alt="" width="18" height="18" />Cursor</span>
-              <span class="hero-client-sep" aria-hidden="true">·</span>
-              <span class="hero-client-item"><img src="icons/antigravity.svg" alt="" width="18" height="18" />Antigravity</span>
-              <span class="hero-client-sep" aria-hidden="true">·</span>
-              <span class="hero-client-item"><img src="icons/opencode.svg" alt="" width="18" height="18" />OpenCode</span>
-              <span class="hero-client-sep" aria-hidden="true">·</span>
-              <span class="hero-client-item">any MCP client</span>
-            </p>
-
-            <!-- Interactive 4-Tab VPSAgent Dashboard Showcase -->
-            <div class="hero-stage" data-rise style="--d: 0.24s">
+            <!-- Interactive 4-Tab VPSAgent Dashboard Showcase (Sidebar Architecture) -->
+            <div class="hero-stage" data-rise style="--d: 0.22s">
               <div class="stage-corner sc-tl" aria-hidden="true"></div>
               <div class="stage-corner sc-tr" aria-hidden="true"></div>
               <div class="stage-corner sc-bl" aria-hidden="true"></div>
@@ -140,308 +105,315 @@
                   <div class="dash-url">https://vps.yourdomain.com</div>
                   <div class="dash-conn">
                     <span class="dash-conn-dot" aria-hidden="true"></span>
-                    <span>Agent connected · Ubuntu 24.04</span>
+                    <span>Bridge active · Ubuntu 24.04</span>
                   </div>
                 </div>
 
-                <div class="dash-topbar">
-                  <div class="dash-app-brand">
-                    <span class="dash-app-icon" aria-hidden="true">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="5 7 11 12 5 17" />
-                        <line x1="13" y1="17" x2="19" y2="17" />
-                      </svg>
-                    </span>
-                    <span class="dash-app-title">VPSAgent</span>
-                  </div>
-
-                  <div class="dash-tabs" role="tablist" aria-label="Interactive VPSAgent Dashboard preview">
-                    <button type="button" class="dash-tab" id="dash-tab-overview" role="tab" aria-selected="true" aria-controls="dash-panel-overview" tabindex="0" data-dash-tab="overview">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
-                      </svg>
-                      <span>Overview</span>
-                    </button>
-                    <button type="button" class="dash-tab" id="dash-tab-apps" role="tab" aria-selected="false" aria-controls="dash-panel-apps" tabindex="-1" data-dash-tab="apps">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
-                        <path d="m3.3 7 8.7 5 8.7-5" />
-                        <path d="M12 22V12" />
-                      </svg>
-                      <span>Apps</span>
-                    </button>
-                    <button type="button" class="dash-tab" id="dash-tab-approvals" role="tab" aria-selected="false" aria-controls="dash-panel-approvals" tabindex="-1" data-dash-tab="approvals">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="m9 11 3 3L22 4" />
-                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-                      </svg>
-                      <span>Approvals &amp; History</span>
-                      <span class="dash-tab-badge" id="dash-pending-badge">1</span>
-                    </button>
-                    <button type="button" class="dash-tab" id="dash-tab-keys" role="tab" aria-selected="false" aria-controls="dash-panel-keys" tabindex="-1" data-dash-tab="keys">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
-                        <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
-                      </svg>
-                      <span>AI Keys &amp; Settings</span>
-                    </button>
-                  </div>
-
-                  <div class="dash-host">
-                    <span aria-hidden="true"></span>
-                    <code>ubuntu-lon-01</code>
-                  </div>
-                </div>
-
-                <div class="dash-body">
-                  <!-- Tab 1: Overview -->
-                  <div class="dash-panel" id="dash-panel-overview" data-dash-panel="overview" role="tabpanel" aria-labelledby="dash-tab-overview">
-                    <div class="dash-head-row">
-                      <div>
-                        <div class="dash-head-title">Server overview</div>
-                        <div class="dash-head-sub">Ubuntu 24.04 LTS · Uptime 42d 18h · 3 apps</div>
-                      </div>
-                      <span class="dash-status-ok">Claude Code connected</span>
+                <div class="dash-shell">
+                  <aside class="dash-sidebar">
+                    <div class="dash-app-brand">
+                      <img
+                        src="icons/vpsagent-mark-sm.svg"
+                        alt=""
+                        width="18"
+                        height="18"
+                        class="brand-mark"
+                        aria-hidden="true"
+                      />
+                      <span class="dash-app-title">VPSAGENT</span>
                     </div>
 
-                    <div class="dash-activity" aria-live="polite">
-                      <span class="dash-activity-label">Agent activity</span>
-                      <code class="dash-activity-code" id="dash-activity-text">deploy_app(analytics-api) → live at https://analytics.yourdomain.com</code>
-                    </div>
-
-                    <div class="dash-metrics">
-                      <div class="dash-metric">
-                        <div class="dash-metric-top">
-                          <span>Processor load</span>
-                          <span>2 vCPU</span>
-                        </div>
-                        <div class="dash-metric-val">18%</div>
-                        <div class="dash-metric-meta">0.36 load avg</div>
-                        <div class="dash-meter"><i style="width: 18%"></i></div>
-                      </div>
-                      <div class="dash-metric">
-                        <div class="dash-metric-top">
-                          <span>Memory</span>
-                          <span>4.0 GB</span>
-                        </div>
-                        <div class="dash-metric-val">1.6 GB</div>
-                        <div class="dash-metric-meta">40% used across 3 apps</div>
-                        <div class="dash-meter dash-meter--sky"><i style="width: 40%"></i></div>
-                      </div>
-                      <div class="dash-metric">
-                        <div class="dash-metric-top">
-                          <span>Disk space</span>
-                          <span>40 GB SSD</span>
-                        </div>
-                        <div class="dash-metric-val">28%</div>
-                        <div class="dash-metric-meta">11.2 GB used · WAL healthy</div>
-                        <div class="dash-meter"><i style="width: 28%"></i></div>
-                      </div>
-                    </div>
-
-                    <div class="dash-split">
-                      <div class="dash-pane">
-                        <div class="dash-pane-head">
-                          <span class="dash-pane-title">Running apps</span>
-                          <button type="button" class="dash-pane-link" data-jump-tab="apps">
-                            <span>Manage apps</span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M5 12h14" />
-                              <path d="m12 5 7 7-7 7" />
-                            </svg>
-                          </button>
-                        </div>
-                        <div class="dash-app-list">
-                          <div class="dash-app-row">
-                            <div class="dash-app-name-row">
-                              <span class="dash-dot" aria-hidden="true"></span>
-                              <span class="dash-app-slug">api-billing</span>
-                              <span class="dash-app-domain">billing.yourdomain.com</span>
-                            </div>
-                            <div class="dash-app-right">
-                              <span class="dash-meta-mono">postgres-16</span>
-                              <span class="dash-status-cell dash-status-cell--ok">Healthy</span>
-                            </div>
-                          </div>
-                          <div class="dash-app-row">
-                            <div class="dash-app-name-row">
-                              <span class="dash-dot" aria-hidden="true"></span>
-                              <span class="dash-app-slug">docs-portal</span>
-                              <span class="dash-app-domain">docs.yourdomain.com</span>
-                            </div>
-                            <div class="dash-app-right">
-                              <span class="dash-meta-mono">0.5 CPU · 512 MB</span>
-                              <span class="dash-status-cell dash-status-cell--ok">Running</span>
-                            </div>
-                          </div>
-                          <div class="dash-app-row">
-                            <div class="dash-app-name-row">
-                              <span class="dash-dot" aria-hidden="true"></span>
-                              <span class="dash-app-slug">worker-queue</span>
-                              <span class="dash-app-domain">private network</span>
-                            </div>
-                            <div class="dash-app-right">
-                              <span class="dash-meta-mono">redis-7</span>
-                              <span class="dash-status-cell dash-status-cell--ok">Running</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="dash-pane">
-                        <div class="dash-pane-head">
-                          <span class="dash-pane-title">Waiting for your click</span>
-                          <button type="button" class="dash-pane-link" data-jump-tab="approvals">
-                            <span>Review queue</span>
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M5 12h14" />
-                              <path d="m12 5 7 7-7 7" />
-                            </svg>
-                          </button>
-                        </div>
-                        <div class="dash-alert-box" id="dash-overview-alert">
-                          <div class="dash-alert-meta">deploy_app · Claude Code</div>
-                          <div class="dash-alert-desc">
-                            Deploy <strong>analytics-api</strong> from GitHub with private Postgres 16 and auto HTTPS.
-                          </div>
-                          <button type="button" class="dash-btn-inline dash-btn-approve" data-jump-tab="approvals">
-                            Review request
-                          </button>
-                        </div>
-                        <div class="dash-bridge-list">
-                          <div class="dash-bridge-row">
-                            <span>Active pass</span>
-                            <strong>Safe Auto-Deploy</strong>
-                          </div>
-                          <div class="dash-bridge-row">
-                            <span>Caddy Auto-TLS</span>
-                            <strong>3 certificates valid</strong>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Tab 2: Apps -->
-                  <div class="dash-panel" id="dash-panel-apps" data-dash-panel="apps" role="tabpanel" aria-labelledby="dash-tab-apps" hidden>
-                    <div class="dash-head-row">
-                      <div>
-                        <div class="dash-head-title">Apps your agent deployed</div>
-                        <div class="dash-head-sub">Deployed from GitHub and registries, each with its own domain, resources and env.</div>
-                      </div>
-                      <span class="dash-status-ok">3 apps running</span>
-                    </div>
-
-                    <div class="dash-table">
-                      <div class="dash-table-row dash-table-head">
-                        <span>Application</span>
-                        <span class="dash-table-hide-sm">Domain &amp; companion</span>
-                        <span class="dash-table-hide-sm">Resources</span>
-                        <span>Status</span>
-                      </div>
-                      <div class="dash-table-row">
-                        <div>
-                          <div class="dash-app-slug">api-billing</div>
-                          <div class="dash-app-domain">github.com/acme/billing@main</div>
-                        </div>
-                        <span class="dash-table-hide-sm">billing.yourdomain.com · Postgres 16</span>
-                        <span class="dash-table-hide-sm">1 CPU · 1 GB</span>
-                        <span class="dash-status-cell dash-status-cell--ok">Running</span>
-                      </div>
-                      <div class="dash-table-row">
-                        <div>
-                          <div class="dash-app-slug">docs-portal</div>
-                          <div class="dash-app-domain">github.com/acme/docs@main</div>
-                        </div>
-                        <span class="dash-table-hide-sm">docs.yourdomain.com · Caddy TLS</span>
-                        <span class="dash-table-hide-sm">0.5 CPU · 512 MB</span>
-                        <span class="dash-status-cell dash-status-cell--ok">Running</span>
-                      </div>
-                      <div class="dash-table-row">
-                        <div>
-                          <div class="dash-app-slug">worker-queue</div>
-                          <div class="dash-app-domain">ghcr.io/acme/worker:v1.8</div>
-                        </div>
-                        <span class="dash-table-hide-sm">Private network · Redis 7</span>
-                        <span class="dash-table-hide-sm">0.5 CPU · 512 MB</span>
-                        <span class="dash-status-cell dash-status-cell--ok">Running</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Tab 3: Approvals & History -->
-                  <div class="dash-panel" id="dash-panel-approvals" data-dash-panel="approvals" role="tabpanel" aria-labelledby="dash-tab-approvals" hidden>
-                    <div class="dash-head-row">
-                      <div>
-                        <div class="dash-head-title">Approvals &amp; history</div>
-                        <div class="dash-head-sub">Review agent actions before they run and scroll back through past activity.</div>
-                      </div>
-                      <button type="button" class="dash-btn-inline dash-btn-reject" id="dash-reset-demo" hidden>
-                        Reset demo
+                    <div class="dash-tabs" role="tablist" aria-label="Interactive VPSAgent Dashboard preview" aria-orientation="vertical">
+                      <button type="button" class="dash-tab" id="dash-tab-overview" role="tab" aria-selected="true" aria-controls="dash-panel-overview" tabindex="0" data-dash-tab="overview">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <rect width="7" height="7" x="3" y="3" rx="1" />
+                          <rect width="7" height="7" x="14" y="3" rx="1" />
+                          <rect width="7" height="7" x="14" y="14" rx="1" />
+                          <rect width="7" height="7" x="3" y="14" rx="1" />
+                        </svg>
+                        <span>Overview</span>
+                      </button>
+                      <button type="button" class="dash-tab" id="dash-tab-apps" role="tab" aria-selected="false" aria-controls="dash-panel-apps" tabindex="-1" data-dash-tab="apps">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                          <path d="m3.3 7 8.7 5 8.7-5" />
+                          <path d="M12 22V12" />
+                        </svg>
+                        <span>Apps</span>
+                      </button>
+                      <button type="button" class="dash-tab" id="dash-tab-approvals" role="tab" aria-selected="false" aria-controls="dash-panel-approvals" tabindex="-1" data-dash-tab="approvals">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+                          <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+                        </svg>
+                        <span>Approvals</span>
+                        <span class="dash-tab-badge" id="dash-pending-badge">1</span>
+                      </button>
+                      <button type="button" class="dash-tab" id="dash-tab-keys" role="tab" aria-selected="false" aria-controls="dash-panel-keys" tabindex="-1" data-dash-tab="keys">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M20 7h-9" />
+                          <path d="M14 17H5" />
+                          <circle cx="17" cy="17" r="3" />
+                          <circle cx="7" cy="7" r="3" />
+                        </svg>
+                        <span>Settings</span>
                       </button>
                     </div>
 
-                    <div class="dash-alert-box" id="dash-approval-item">
-                      <div class="dash-alert-meta" id="dash-approval-meta">Pending · deploy_app · Claude Code (Ask Me First)</div>
-                      <div class="dash-alert-desc" id="dash-approval-desc">
-                        Build <strong>analytics-api</strong> from its Dockerfile, add a private Postgres 16, and serve it on <code>analytics.yourdomain.com</code>.
+                    <div class="dash-sidebar-foot">
+                      <span class="dash-host-label">Server</span>
+                      <div class="dash-host">
+                        <span aria-hidden="true"></span>
+                        <code>ubuntu-lon-01</code>
                       </div>
-                      <div class="dash-action-row" id="dash-approval-actions">
-                        <button type="button" class="dash-btn-inline dash-btn-reject" id="dash-reject-btn">Reject</button>
-                        <button type="button" class="dash-btn-inline dash-btn-approve" id="dash-approve-btn">Approve &amp; deploy</button>
+                    </div>
+                  </aside>
+
+                  <div class="dash-body">
+                    <!-- Tab 1: Overview -->
+                    <div class="dash-panel" id="dash-panel-overview" data-dash-panel="overview" role="tabpanel" aria-labelledby="dash-tab-overview">
+                      <div class="dash-head-row">
+                        <div>
+                          <div class="dash-head-title">Server overview</div>
+                          <div class="dash-head-sub">Ubuntu 24.04 LTS · Uptime 42d 18h · 0 docker.sock mounts</div>
+                        </div>
+                        <span class="dash-status-ok">All safety checks passed</span>
+                      </div>
+
+                      <div class="dash-metrics">
+                        <div class="dash-metric">
+                          <div class="dash-metric-top">
+                            <span>Processor load</span>
+                            <span>2 vCPU</span>
+                          </div>
+                          <div class="dash-metric-val">18%</div>
+                          <div class="dash-metric-meta">0.36 load avg</div>
+                          <div class="dash-meter"><i style="width: 18%"></i></div>
+                        </div>
+                        <div class="dash-metric">
+                          <div class="dash-metric-top">
+                            <span>Memory</span>
+                            <span>4.0 GB</span>
+                          </div>
+                          <div class="dash-metric-val">1.6 GB</div>
+                          <div class="dash-metric-meta">40% used across 3 apartments</div>
+                          <div class="dash-meter dash-meter--bright"><i style="width: 40%"></i></div>
+                        </div>
+                        <div class="dash-metric">
+                          <div class="dash-metric-top">
+                            <span>Disk space</span>
+                            <span>40 GB SSD</span>
+                          </div>
+                          <div class="dash-metric-val">28%</div>
+                          <div class="dash-metric-meta">11.2 GB used · WAL healthy</div>
+                          <div class="dash-meter"><i style="width: 28%"></i></div>
+                        </div>
+                      </div>
+
+                      <div class="dash-split">
+                        <div class="dash-pane">
+                          <div class="dash-pane-head">
+                            <span class="dash-pane-title">Running isolated apps</span>
+                            <button type="button" class="dash-pane-link" data-jump-tab="apps">
+                              <span>Manage apps</span>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                              </svg>
+                            </button>
+                          </div>
+                          <div class="dash-app-list">
+                            <div class="dash-app-row">
+                              <div class="dash-app-name-row">
+                                <span class="dash-dot" aria-hidden="true"></span>
+                                <span class="dash-app-slug">api-billing</span>
+                                <span class="dash-app-domain">billing.yourdomain.com</span>
+                              </div>
+                              <div class="dash-app-right">
+                                <span class="dash-meta-mono">postgres-16</span>
+                                <span class="dash-status-cell dash-status-cell--ok">Healthy</span>
+                              </div>
+                            </div>
+                            <div class="dash-app-row">
+                              <div class="dash-app-name-row">
+                                <span class="dash-dot" aria-hidden="true"></span>
+                                <span class="dash-app-slug">docs-portal</span>
+                                <span class="dash-app-domain">docs.yourdomain.com</span>
+                              </div>
+                              <div class="dash-app-right">
+                                <span class="dash-meta-mono">0.5 CPU · 512m</span>
+                                <span class="dash-status-cell dash-status-cell--ok">Running</span>
+                              </div>
+                            </div>
+                            <div class="dash-app-row">
+                              <div class="dash-app-name-row">
+                                <span class="dash-dot" aria-hidden="true"></span>
+                                <span class="dash-app-slug">worker-queue</span>
+                                <span class="dash-app-domain">internal bridge</span>
+                              </div>
+                              <div class="dash-app-right">
+                                <span class="dash-meta-mono">redis-7</span>
+                                <span class="dash-status-cell dash-status-cell--ok">Running</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="dash-pane">
+                          <div class="dash-pane-head">
+                            <span class="dash-pane-title">Waiting for your click</span>
+                            <button type="button" class="dash-pane-link" data-jump-tab="approvals">
+                              <span>Review queue</span>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                              </svg>
+                            </button>
+                          </div>
+                          <div class="dash-alert-box" id="dash-overview-alert">
+                            <div class="dash-alert-meta">deploy_app · Claude Code</div>
+                            <div class="dash-alert-desc">
+                              Deploy <strong>analytics-api</strong> from GitHub with private Postgres 16 companion and auto HTTPS.
+                            </div>
+                            <button type="button" class="dash-btn-inline dash-btn-approve" data-jump-tab="approvals">
+                              Review request
+                            </button>
+                          </div>
+                          <div class="dash-bridge-list">
+                            <div class="dash-bridge-row">
+                              <span>Runtime Bridge</span>
+                              <strong>Unix socket · Active</strong>
+                            </div>
+                            <div class="dash-bridge-row">
+                              <span>Caddy Auto-TLS</span>
+                              <strong>3 certificates valid</strong>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
-                    <div class="dash-table">
-                      <div class="dash-audit-row">
-                        <span>mcp.deploy_app(docs-portal) · Safe Auto-Deploy</span>
-                        <span class="dash-status-cell dash-status-cell--ok">Succeeded</span>
+                    <!-- Tab 2: Apps -->
+                    <div class="dash-panel" id="dash-panel-apps" data-dash-panel="apps" role="tabpanel" aria-labelledby="dash-tab-apps" hidden>
+                      <div class="dash-head-row">
+                        <div>
+                          <div class="dash-head-title">Locked apartment apps</div>
+                          <div class="dash-head-sub">Every app runs with dropped capabilities, isolated bridge networking, and encrypted .env secrets.</div>
+                        </div>
+                        <span class="dash-status-ok">3 apps isolated</span>
                       </div>
-                      <div class="dash-audit-row">
-                        <span>mcp.update_app_env(api-billing) · STRIPE_KEY=[REDACTED]</span>
-                        <span class="dash-status-cell dash-status-cell--ok">Approved</span>
-                      </div>
-                      <div class="dash-audit-row">
-                        <span>mcp.run_host_command(df -h) · Approved by you</span>
-                        <span class="dash-status-cell dash-status-cell--ok">Approved</span>
+
+                      <div class="dash-table">
+                        <div class="dash-table-row dash-table-head">
+                          <span>Application</span>
+                          <span class="dash-table-hide-sm">Domain &amp; companion</span>
+                          <span class="dash-table-hide-sm">Sandbox caps</span>
+                          <span>Status</span>
+                        </div>
+                        <div class="dash-table-row">
+                          <div>
+                            <div class="dash-app-slug">api-billing</div>
+                            <div class="dash-app-domain">github.com/acme/billing@main</div>
+                          </div>
+                          <span class="dash-table-hide-sm">billing.yourdomain.com · Postgres 16</span>
+                          <span class="dash-table-hide-sm"><code>cap_drop: ALL</code> · 1 CPU</span>
+                          <span class="dash-status-cell dash-status-cell--ok">Running</span>
+                        </div>
+                        <div class="dash-table-row">
+                          <div>
+                            <div class="dash-app-slug">docs-portal</div>
+                            <div class="dash-app-domain">github.com/acme/docs@main</div>
+                          </div>
+                          <span class="dash-table-hide-sm">docs.yourdomain.com · Caddy TLS</span>
+                          <span class="dash-table-hide-sm"><code>cap_drop: ALL</code> · 0.5 CPU</span>
+                          <span class="dash-status-cell dash-status-cell--ok">Running</span>
+                        </div>
+                        <div class="dash-table-row">
+                          <div>
+                            <div class="dash-app-slug">worker-queue</div>
+                            <div class="dash-app-domain">ghcr.io/acme/worker:v1.8</div>
+                          </div>
+                          <span class="dash-table-hide-sm">Private bridge · Redis 7</span>
+                          <span class="dash-table-hide-sm"><code>no-new-privileges</code> · 512m</span>
+                          <span class="dash-status-cell dash-status-cell--ok">Running</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <!-- Tab 4: AI Keys & Settings -->
-                  <div class="dash-panel" id="dash-panel-keys" data-dash-panel="keys" role="tabpanel" aria-labelledby="dash-tab-keys" hidden>
-                    <div class="dash-head-row">
-                      <div>
-                        <div class="dash-head-title">AI keys &amp; MCP gateway</div>
-                        <div class="dash-head-sub">Endpoint: <code>https://vps.yourdomain.com/mcp</code> · <code>vpsmcp_*</code> visitor passes</div>
+                    <!-- Tab 3: Approvals & History -->
+                    <div class="dash-panel" id="dash-panel-approvals" data-dash-panel="approvals" role="tabpanel" aria-labelledby="dash-tab-approvals" hidden>
+                      <div class="dash-head-row">
+                        <div>
+                          <div class="dash-head-title">Approvals &amp; audit history</div>
+                          <div class="dash-head-sub">Review AI actions before execution and inspect redacted server logs.</div>
+                        </div>
+                        <button type="button" class="dash-btn-inline dash-btn-reject" id="dash-reset-demo" hidden>
+                          Reset demo
+                        </button>
                       </div>
-                      <span class="dash-status-ok">30 MCP tools active</span>
+
+                      <div class="dash-alert-box" id="dash-approval-item">
+                        <div class="dash-alert-meta" id="dash-approval-meta">Pending · deploy_app · Claude Code (ask-first pass)</div>
+                        <div class="dash-alert-desc" id="dash-approval-desc">
+                          Build <strong>analytics-api</strong> from Dockerfile, allocate isolated bridge network, bind <code>analytics.yourdomain.com</code>, and redact 4 secret env keys from logs.
+                        </div>
+                        <div class="dash-action-row" id="dash-approval-actions">
+                          <button type="button" class="dash-btn-inline dash-btn-reject" id="dash-reject-btn">Reject</button>
+                          <button type="button" class="dash-btn-inline dash-btn-approve" id="dash-approve-btn">Approve &amp; deploy</button>
+                        </div>
+                      </div>
+
+                      <div class="dash-table">
+                        <div class="dash-audit-row">
+                          <span>mcp.deploy_app(docs-portal) · Safe Auto-Deploy</span>
+                          <span class="dash-status-cell dash-status-cell--ok">Succeeded</span>
+                        </div>
+                        <div class="dash-audit-row">
+                          <span>mcp.update_app_env(api-billing) · STRIPE_KEY=[REDACTED]</span>
+                          <span class="dash-status-cell dash-status-cell--ok">Approved</span>
+                        </div>
+                        <div class="dash-audit-row">
+                          <span>mcp.host_command(rm -rf /) · Blocked by bridge allowlist</span>
+                          <span class="dash-status-cell dash-status-cell--warn">Denied</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <div class="dash-table">
-                      <div class="dash-table-row dash-table-head">
-                        <span>Visitor pass</span>
-                        <span class="dash-table-hide-sm">Pass level</span>
-                        <span class="dash-table-hide-sm">App lock</span>
-                        <span>Prefix</span>
+                    <!-- Tab 4: AI Keys & Settings -->
+                    <div class="dash-panel" id="dash-panel-keys" data-dash-panel="keys" role="tabpanel" aria-labelledby="dash-tab-keys" hidden>
+                      <div class="dash-head-row">
+                        <div>
+                          <div class="dash-head-title">AI keys &amp; MCP gateway</div>
+                          <div class="dash-head-sub">Endpoint: <code>https://vps.yourdomain.com/mcp</code> · SHA-256 hashed <code>vpsmcp_*</code> visitor passes</div>
+                        </div>
+                        <span class="dash-status-ok">28 MCP tools active</span>
                       </div>
-                      <div class="dash-table-row">
-                        <span class="dash-app-slug">Claude Code Laptop</span>
-                        <span class="dash-table-hide-sm">Safe Auto-Deploy (asks before delete)</span>
-                        <span class="dash-table-hide-sm">All apps</span>
-                        <code>vpsmcp_8a9f…</code>
-                      </div>
-                      <div class="dash-table-row">
-                        <span class="dash-app-slug">Cursor Staging Key</span>
-                        <span class="dash-table-hide-sm">Ask Me First (every change queued)</span>
-                        <span class="dash-table-hide-sm"><code>docs-portal</code> only</span>
-                        <code>vpsmcp_3c1b…</code>
-                      </div>
-                      <div class="dash-table-row">
-                        <span class="dash-app-slug">Monitoring Read Bot</span>
-                        <span class="dash-table-hide-sm">Look Only (logs &amp; health only)</span>
-                        <span class="dash-table-hide-sm">Read-only</span>
-                        <code>vpsmcp_7d04…</code>
+
+                      <div class="dash-table">
+                        <div class="dash-table-row dash-table-head">
+                          <span>Visitor pass</span>
+                          <span class="dash-table-hide-sm">Permission scope</span>
+                          <span class="dash-table-hide-sm">App lock</span>
+                          <span>Prefix</span>
+                        </div>
+                        <div class="dash-table-row">
+                          <span class="dash-app-slug">Claude Code Laptop</span>
+                          <span class="dash-table-hide-sm">Safe Auto-Deploy (asks before delete)</span>
+                          <span class="dash-table-hide-sm">All isolated apps</span>
+                          <code>vpsmcp_8a9f…</code>
+                        </div>
+                        <div class="dash-table-row">
+                          <span class="dash-app-slug">Cursor Staging Key</span>
+                          <span class="dash-table-hide-sm">Ask Me First (every change queued)</span>
+                          <span class="dash-table-hide-sm"><code>docs-portal</code> only</span>
+                          <code>vpsmcp_3c1b…</code>
+                        </div>
+                        <div class="dash-table-row">
+                          <span class="dash-app-slug">Monitoring Read Bot</span>
+                          <span class="dash-table-hide-sm">Look Only (logs &amp; health only)</span>
+                          <span class="dash-table-hide-sm">Read-only</span>
+                          <code>vpsmcp_7d04…</code>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -451,64 +423,13 @@
           </div>
         </section>
 
-        <!-- 2. Demo -->
-        <section id="demo" class="section-band">
-          <div class="container">
-            <div class="section-head">
-              <h2 class="display">Watch an agent ship an app.</h2>
-            </div>
-
-            <!-- TODO(diego): set data-youtube-id when the demo is published -->
-            <div class="demo-slot" data-youtube-id="">
-              <div class="demo-placeholder">
-                <div class="demo-play-badge" aria-hidden="true">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5.14v14l11-7-11-7z" />
-                  </svg>
-                </div>
-                <p class="demo-caption">
-                  Demo coming soon: Claude Code takes a repo to a live HTTPS app on a $5 VPS, start to finish.
-                </p>
-                <a href="#early-access" class="btn btn-primary">Get it in your inbox</a>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- 3. How it works -->
-        <section id="how" class="section-band">
-          <div class="container">
-            <div class="section-head">
-              <h2 class="display">Three steps. Then you just talk to your agent.</h2>
-            </div>
-
-            <ol class="how-grid">
-              <li class="how-card">
-                <span class="how-num" aria-hidden="true">01</span>
-                <h3>Install on your server.</h3>
-                <p>One command on a fresh Ubuntu 22.04 or 24.04 VPS. Docker, the control panel and HTTPS routing are set up for you.</p>
-              </li>
-              <li class="how-card">
-                <span class="how-num" aria-hidden="true">02</span>
-                <h3>Connect your agent.</h3>
-                <p>Create a pass in the dashboard and paste the MCP link into Claude Code, Codex, Cursor or any MCP client.</p>
-              </li>
-              <li class="how-card">
-                <span class="how-num" aria-hidden="true">03</span>
-                <h3>Ask it to ship.</h3>
-                <p>"Deploy github.com/me/app to app.mydomain.com with Postgres." Your agent builds, deploys, wires the domain, checks the logs and tells you when it's live.</p>
-              </li>
-            </ol>
-          </div>
-        </section>
-
-        <!-- 4. Interactive Remote MCP Client Workbench -->
+        <!-- 2. Interactive Remote MCP Client Workbench -->
         <section id="clients" class="section-band">
           <div class="container">
             <div class="section-head">
-              <h2 class="display">Use the agent you already have.</h2>
+              <h2 class="display">Works with every AI client you already use.</h2>
               <p>
-                VPSAgent has no chat window and no LLM bill of its own. It gives your coding agent 30 tools for your server over one MCP link. Pick your client and copy the snippet.
+                No built-in chat bloat or extra LLM bills. Generate a scoped visitor pass, paste one HTTPS snippet into your coding agent, and deploy directly from your editor or terminal.
               </p>
             </div>
 
@@ -559,15 +480,15 @@
                   </div>
                   <div class="wb-spec-item">
                     <div class="wb-spec-label">Available tools</div>
-                    <div class="wb-spec-value">30 tools: deploy, logs, domains, env, files, services, server commands.</div>
+                    <div class="wb-spec-value">28 structured server &amp; deploy tools</div>
                   </div>
                   <div class="wb-spec-item">
                     <div class="wb-spec-label">Permission levels</div>
-                    <div class="wb-spec-value">5 pass levels, from Look Only to Full Server Admin.</div>
+                    <div class="wb-spec-value">5 scopes from Look Only to Host Admin</div>
                   </div>
                   <div class="wb-spec-item">
-                    <div class="wb-spec-label">App lock</div>
-                    <div class="wb-spec-value">Optional: limit a pass to one app.</div>
+                    <div class="wb-spec-label">Key security</div>
+                    <div class="wb-spec-value">SHA-256 hashed passes, optional per-app lock</div>
                   </div>
                 </div>
               </div>
@@ -575,124 +496,55 @@
           </div>
         </section>
 
-        <!-- 5. What your agent can do -->
-        <section id="tools" class="section-band">
+        <!-- 3. Zero-Root Architecture & Live Action Gate -->
+        <section id="security" class="section-band">
           <div class="container">
             <div class="section-head">
-              <h2 class="display">What your agent can do.</h2>
+              <h2 class="display">AI proposes the change. You sign off before it ships.</h2>
               <p>
-                30 MCP tools to deploy apps, wire HTTPS domains, spin up databases, debug logs and manage the server itself.
+                Core containers never mount <code>/var/run/docker.sock</code>. Every Docker and Caddy command passes through an allowlisted Python Runtime Bridge on a private host Unix socket, and risky actions pause for your click.
               </p>
             </div>
 
-            <div class="blueprint-matrix">
-              <article class="bp-cell">
-                <div class="bp-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
-                    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
-                    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-                    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-                  </svg>
-                </div>
-                <h3>Ship</h3>
-                <p>Deploy from GitHub (public or private), Docker Hub or GHCR. Rebuild on demand.</p>
-                <div class="bp-spec">deploy_app · rebuild_app · inspect_git_repo</div>
-              </article>
-
-              <article class="bp-cell">
-                <div class="bp-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                    <path d="M2 12h20" />
-                  </svg>
-                </div>
-                <h3>Domains &amp; HTTPS</h3>
-                <p>Point a domain and certificates are issued and renewed automatically.</p>
-                <div class="bp-spec">set_app_domain</div>
-              </article>
-
-              <article class="bp-cell">
-                <div class="bp-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <ellipse cx="12" cy="5" rx="9" ry="3" />
-                    <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
-                    <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" />
-                  </svg>
-                </div>
-                <h3>Databases</h3>
-                <p>Give any app its own Postgres 16 or Redis 7, reachable only from that app.</p>
-                <div class="bp-spec">postgres:16 · redis:7</div>
-              </article>
-
-              <article class="bp-cell">
-                <div class="bp-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="4 17 10 11 4 5" />
-                    <line x1="12" y1="19" x2="20" y2="19" />
-                  </svg>
-                </div>
-                <h3>Run &amp; debug</h3>
-                <p>Start, stop, restart, read logs, or run a command inside the app.</p>
-                <div class="bp-spec">get_app_logs · restart_app · exec_in_app</div>
-              </article>
-
-              <article class="bp-cell">
-                <div class="bp-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
-                    <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
-                  </svg>
-                </div>
-                <h3>Config</h3>
-                <p>Set environment variables. Secret values are stored encrypted and never echoed back to the agent.</p>
-                <div class="bp-spec">update_app_env</div>
-              </article>
-
-              <article class="bp-cell">
-                <div class="bp-icon" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
-                    <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
-                    <line x1="6" x2="6.01" y1="6" y2="6" />
-                    <line x1="6" x2="6.01" y1="18" y2="18" />
-                  </svg>
-                </div>
-                <h3>The server itself</h3>
-                <p>Health, files, services and shell commands on the host, each waiting for your OK unless you choose otherwise.</p>
-                <div class="bp-spec">get_host_health · read_file · manage_service · run_host_command</div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <!-- 6. Stay in the loop -->
-        <section id="approvals" class="section-band">
-          <div class="container">
-            <div class="section-head">
-              <h2 class="display">Your agent asks before the big moves.</h2>
-              <p>
-                Each pass has a level. Let your agent deploy on its own and ask before deleting, or have it queue every change for one click. Everything it does lands in a history you can scroll back through.
-              </p>
+            <!-- Horizontal Zero-Root Architecture Pipeline -->
+            <div class="pipeline" aria-label="Zero-root request flow">
+              <div class="pipe-node">
+                <div class="pipe-title">External AI Agent</div>
+                <div class="pipe-desc">Sends structured MCP tool call with scoped bearer pass</div>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true">→</div>
+              <div class="pipe-node">
+                <div class="pipe-title">Hono Control API</div>
+                <div class="pipe-desc">Checks scope, redacts secrets, queues risky actions</div>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true">→</div>
+              <div class="pipe-node pipe-node--accent">
+                <div class="pipe-title">Unix Socket Bridge</div>
+                <div class="pipe-desc">Allowlisted host Python daemon with zero docker.sock mounts</div>
+              </div>
+              <div class="pipe-arrow" aria-hidden="true">→</div>
+              <div class="pipe-node">
+                <div class="pipe-title">Isolated App</div>
+                <div class="pipe-desc">Hardened container + Caddy 2 HTTPS certificate</div>
+              </div>
             </div>
 
             <!-- Interactive Action Gate Simulator -->
             <div class="gate-shell">
               <div class="gate-sidebar">
-                <div class="gate-sidebar-head">Try a request</div>
-                <div class="gate-scenarios" role="tablist" aria-label="Approval scenarios" aria-orientation="vertical">
+                <div class="gate-sidebar-head">Test a live agent request</div>
+                <div class="gate-scenarios" role="tablist" aria-label="Safety scenarios" aria-orientation="vertical">
                   <button type="button" class="gate-scen" id="gate-tab-deploy" role="tab" aria-selected="true" aria-controls="gate-panel" tabindex="0" data-scenario="deploy">
                     <span class="gate-scen-title">Deploy billing-api</span>
-                    <span class="gate-scen-meta"><code>deploy_app</code> · Requires approval</span>
+                    <span class="gate-scen-meta">deploy_app · Requires approval</span>
                   </button>
                   <button type="button" class="gate-scen" id="gate-tab-env" role="tab" aria-selected="false" aria-controls="gate-panel" tabindex="-1" data-scenario="env">
                     <span class="gate-scen-title">Update Stripe secret</span>
-                    <span class="gate-scen-meta"><code>update_app_env</code> · Encrypted &amp; redacted</span>
+                    <span class="gate-scen-meta">update_app_env · Encrypted &amp; redacted</span>
                   </button>
-                  <button type="button" class="gate-scen" id="gate-tab-host" role="tab" aria-selected="false" aria-controls="gate-panel" tabindex="-1" data-scenario="host">
-                    <span class="gate-scen-title">Run a server command</span>
-                    <span class="gate-scen-meta"><code>run_host_command</code> · Waits for your OK</span>
+                  <button type="button" class="gate-scen" id="gate-tab-blocked" role="tab" aria-selected="false" aria-controls="gate-panel" tabindex="-1" data-scenario="blocked">
+                    <span class="gate-scen-title">Run raw shell command</span>
+                    <span class="gate-scen-meta">host_command · Blocked by bridge</span>
                   </button>
                 </div>
               </div>
@@ -701,7 +553,7 @@
                 <div class="gate-stage-top">
                   <div>
                     <div class="gate-req-title" id="gate-title">deploy_app · billing-api</div>
-                    <div class="gate-req-sub" id="gate-sub">Requested by Claude Code · Pass: Ask Me First</div>
+                    <div class="gate-req-sub" id="gate-sub">Requested by Claude Code · Scope: Ask Me First</div>
                   </div>
                   <span class="dash-status-cell dash-status-cell--warn" id="gate-status">Waiting for approval</span>
                 </div>
@@ -712,12 +564,12 @@
                     <code>github.com/acme/billing (Dockerfile build)</code>
                   </div>
                   <div class="gate-row">
-                    <span>Resources</span>
-                    <code>0.5 vCPU · 512 MB RAM</code>
+                    <span>Container policy</span>
+                    <code>cap_drop: ALL · no-new-privileges · 0 docker.sock</code>
                   </div>
                   <div class="gate-row">
-                    <span>Database</span>
-                    <code>Private Postgres 16</code>
+                    <span>Resource limits</span>
+                    <code>0.5 vCPU · 512m RAM · Private Postgres 16</code>
                   </div>
                   <div class="gate-row">
                     <span>Public route</span>
@@ -734,39 +586,88 @@
                 </div>
               </div>
             </div>
-
-            <dl class="levels">
-              <div class="level-row">
-                <dt>Look Only</dt>
-                <dd>Reads health, repos and logs. Changes nothing.</dd>
-              </div>
-              <div class="level-row">
-                <dt>Ask Me First</dt>
-                <dd>Queues every change for your click.</dd>
-              </div>
-              <div class="level-row level-row--rec">
-                <dt>Safe Auto-Deploy <span class="badge-rec">recommended</span></dt>
-                <dd>Deploys, rebuilds and updates apps on its own; asks before deleting an app or touching the server.</dd>
-              </div>
-              <div class="level-row">
-                <dt>Trusted Auto-Pass</dt>
-                <dd>Manages apps on its own, including deletes; still asks before server-level actions.</dd>
-              </div>
-              <div class="level-row">
-                <dt>Full Server Admin</dt>
-                <dd>Runs everything, including server commands, without waiting.</dd>
-              </div>
-            </dl>
           </div>
         </section>
 
-        <!-- 7. Install -->
+        <!-- 4. Locked Apartment Isolation Blueprint Matrix -->
+        <section id="isolation" class="section-band">
+          <div class="container">
+            <div class="section-head">
+              <h2 class="display">Every app lives behind its own locked door.</h2>
+              <p>
+                Built for affordable 1 to 2 GB Ubuntu servers without sacrificing defense-in-depth between projects.
+              </p>
+            </div>
+
+            <div class="blueprint-matrix">
+              <article class="bp-cell">
+                <div class="bp-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                </div>
+                <h3>Hardened app containers</h3>
+                <p>
+                  Each workload drops all Linux root capabilities, blocks privilege escalation, binds its own Docker bridge network, and enforces CPU and memory limits so one noisy app never starves your server.
+                </p>
+                <div class="bp-spec">cap_drop: ALL · no-new-privileges · 0.5 vCPU / 512m default</div>
+              </article>
+
+              <article class="bp-cell">
+                <div class="bp-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <ellipse cx="12" cy="5" rx="9" ry="3" />
+                    <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5" />
+                    <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3" />
+                  </svg>
+                </div>
+                <h3>Private Postgres &amp; Redis companions</h3>
+                <p>
+                  Spin up per-app <code>postgres:16-alpine</code> and <code>redis:7-alpine</code> databases inside that app's private bridge network. Databases stay unreachable from the public internet and sibling apps.
+                </p>
+                <div class="bp-spec">Postgres 16 Alpine · Redis 7 Alpine · Private bridge only</div>
+              </article>
+
+              <article class="bp-cell">
+                <div class="bp-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" />
+                    <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
+                  </svg>
+                </div>
+                <h3>Encrypted secrets &amp; scrubbed logs</h3>
+                <p>
+                  Environment variables stay encrypted at rest inside built-in <code>node:sqlite</code> (WAL mode) and are automatically redacted from container logs, audit trails, and every MCP response returned to your AI.
+                </p>
+                <div class="bp-spec">SQLite WAL state · Auto secret redaction · Full audit trail</div>
+              </article>
+
+              <article class="bp-cell">
+                <div class="bp-icon" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                    <path d="M2 12h20" />
+                  </svg>
+                </div>
+                <h3>Automatic Caddy 2 HTTPS &amp; Git builds</h3>
+                <p>
+                  Point any domain and Caddy 2 issues Let's Encrypt TLS certificates automatically. Deploy from Docker Hub, GHCR, or build directly from private GitHub repositories via <code>Dockerfile</code>.
+                </p>
+                <div class="bp-spec">Caddy 2 Auto-TLS · Private GitHub tokens · SSH tunnel setup</div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. Two-Minute Ubuntu Install Band -->
         <section id="install" class="section-band">
           <div class="container">
             <div class="section-head">
-              <h2 class="display">One command to install.</h2>
+              <h2 class="display">Up and running in two minutes.</h2>
               <p>
-                Runs on a fresh $5 Ubuntu 22.04 or 24.04 LTS VPS. No cloud account, no external database.
+                Install on a fresh $5 Ubuntu 22.04 or 24.04 LTS server with one command. No cloud account required.
               </p>
             </div>
 
@@ -785,7 +686,6 @@
               <div class="install-term" id="install-panel" role="tabpanel" aria-labelledby="install-tab-curl">
                 <div class="term-cmd-line">
                   <span class="prompt" aria-hidden="true">$</span>
-                  <!-- TODO(diego): switch to the v2.0.0-alpha.1 tag URL once the tag exists and install.sh defaults VPSAGENT_REPO_REF to it -->
                   <code id="term-cmd">curl -fsSL https://raw.githubusercontent.com/VPSAgent/vpsagent/main/bootstrap/install.sh | sudo bash</code>
                 </div>
                 <div class="term-output">
@@ -795,11 +695,11 @@
                   </div>
                   <div class="term-out-row">
                     <span class="term-ok" aria-hidden="true">✓</span>
-                    <span>VPSAgent services started</span>
+                    <span>vpsagent-runtime.service active (/run/vpsagent/runtime-bridge.sock)</span>
                   </div>
                   <div class="term-out-row">
                     <span class="term-ok" aria-hidden="true">✓</span>
-                    <span>Control panel + HTTPS router healthy</span>
+                    <span>Hono Control API + React 19 UI + Caddy 2 healthy (0 docker.sock)</span>
                   </div>
                   <div class="term-out-row term-out-row--hi">
                     <span class="term-ok" aria-hidden="true">✓</span>
@@ -812,108 +712,42 @@
             <div class="install-pillars">
               <div class="pillar">
                 <h3>Runs on a $5 VPS</h3>
-                <p>Node.js, SQLite and Caddy in a few containers. No external database server.</p>
+                <p>Lightweight Node.js Control API, SQLite WAL, Python bridge, and Caddy 2 with zero external database servers needed.</p>
               </div>
               <div class="pillar">
-                <h3>Finish setup over SSH</h3>
-                <p>No domain yet? Finish setup through a localhost SSH tunnel, then add your domain.</p>
+                <h3>Private Step 1 onboarding</h3>
+                <p>Even without a domain ready, finish setup through a localhost SSH tunnel so credentials never cross plaintext HTTP.</p>
               </div>
               <div class="pillar">
-                <h3>Open source</h3>
-                <p>AGPL-3.0. Read every line on GitHub.</p>
+                <h3>100% GNU AGPL-3.0 open source</h3>
+                <p>Inspect every bridge allowlist, audit rule, and container hardening flag on GitHub with zero vendor lock-in.</p>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- 8. Free on every server + What's next -->
-        <section id="next" class="section-band">
-          <div class="container">
-            <div class="section-head">
-              <h2 class="display">Free on every server you own.</h2>
-              <p>
-                Install VPSAgent on as many servers as you like. Each one is complete on its own: no app limits, no deploy limits.
-              </p>
-            </div>
-
-            <article class="next-card">
-              <span class="pill-coming">Coming later</span>
-              <h3>One agent, your whole fleet.</h3>
-              <p>
-                A connection layer that lets one agent see all your servers: deploy to any of them, move apps between them, share a private network, and keep one history. Tell us if you'd use it.
-              </p>
-              <a href="#early-access" class="next-link">Get early access →</a>
-            </article>
-          </div>
-        </section>
-
-        <!-- 9. Built in public -->
-        <section id="sgdev" class="section-band sec-sgdev">
-          <div class="container sgdev-inner">
-            <div class="sgdev-copy">
-              <h2 class="display">Built in public.</h2>
-              <p>
-                I'm Diego, and I make essays about AI and technology on SGDev. VPSAgent is what I'm building to answer one question: if agents can write the code, why can't they ship it? Follow along.
-              </p>
-            </div>
-            <div class="sgdev-actions">
-              <!-- TODO(diego): SGDev YouTube URL -->
-              <a href="#" class="btn btn-primary">Watch on YouTube</a>
+        <!-- 6. Closing CTA -->
+        <section class="sec-cta">
+          <div class="container cta-inner">
+            <h2 class="display cta-title">Hand your AI a server, not your root password.</h2>
+            <p class="cta-sub">
+              Install VPSAgent on your Ubuntu box in two minutes, issue a scoped visitor pass, and watch your agent ship real apps safely.
+            </p>
+            <div class="cta-actions">
+              <a href="#install" class="btn btn-primary btn-lg">Install on Ubuntu</a>
               <a
                 href="https://github.com/VPSAgent/vpsagent"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-ghost"
+                class="cta-link"
               >
-                Star on GitHub
+                <span>Explore source on GitHub</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M7 7h10v10" />
+                  <path d="M7 17 17 7" />
+                </svg>
               </a>
             </div>
-          </div>
-        </section>
-
-        <!-- 10. Early access -->
-        <section id="early-access" class="section-band sec-cta">
-          <div class="container cta-inner">
-            <h2 class="display cta-title">Get early access + build notes.</h2>
-            <p class="cta-sub">
-              Occasional emails: new releases, the demo video, and what I'm building next. No spam, unsubscribe anytime.
-            </p>
-            <!-- TODO(diego): create a Buttondown account and replace BUTTONDOWN_USERNAME. In Buttondown settings, optionally add the custom fields multi_server, would_pay, first_deploy so they show in the dashboard. -->
-            <form class="waitlist" action="https://buttondown.com/api/emails/embed-subscribe/BUTTONDOWN_USERNAME" method="post" target="_blank">
-              <div class="wl-field">
-                <label for="wl-email">Email</label>
-                <input id="wl-email" type="email" name="email" autocomplete="email" required placeholder="you@example.com" />
-              </div>
-
-              <fieldset class="wl-fieldset">
-                <legend>Would you run VPSAgent on more than one server? <span class="opt">(optional)</span></legend>
-                <div class="wl-radios">
-                  <label class="wl-radio"><input type="radio" name="metadata__multi_server" value="yes" /> Yes</label>
-                  <label class="wl-radio"><input type="radio" name="metadata__multi_server" value="maybe" /> Maybe</label>
-                  <label class="wl-radio"><input type="radio" name="metadata__multi_server" value="no" /> No</label>
-                </div>
-              </fieldset>
-
-              <fieldset class="wl-fieldset">
-                <legend>Would you pay for a layer that connects your servers? <span class="opt">(optional)</span></legend>
-                <div class="wl-radios">
-                  <label class="wl-radio"><input type="radio" name="metadata__would_pay" value="yes" /> Yes</label>
-                  <label class="wl-radio"><input type="radio" name="metadata__would_pay" value="maybe" /> Maybe</label>
-                  <label class="wl-radio"><input type="radio" name="metadata__would_pay" value="no" /> No</label>
-                </div>
-              </fieldset>
-
-              <div class="wl-field">
-                <label for="wl-first">What would you deploy first? <span class="opt">(optional)</span></label>
-                <input id="wl-first" type="text" name="metadata__first_deploy" maxlength="200" placeholder="e.g. a Next.js side project with Postgres" />
-              </div>
-
-              <input type="hidden" name="tag" value="website" />
-              <input type="hidden" name="embed" value="1" />
-
-              <button type="submit" class="btn btn-primary btn-lg wl-submit">Get early access</button>
-              <p class="fine">You'll get one email to confirm. That's it until there's something worth sending.</p>
-            </form>
           </div>
         </section>
       </main>
@@ -921,25 +755,25 @@
       <footer class="footer">
         <div class="footer-inner">
           <div class="footer-brand">
-            <span class="footer-brand-mark" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="5 7 11 12 5 17" />
-                <line x1="13" y1="17" x2="19" y2="17" />
-              </svg>
-            </span>
-            <span>VPSAgent · v2.0.0-alpha · Your coding agent's own VPS</span>
+            <img
+              src="icons/vpsagent-mark-sm.svg"
+              alt=""
+              width="16"
+              height="16"
+              class="brand-mark"
+              aria-hidden="true"
+            />
+            <span class="footer-brand-name">VPSAGENT</span>
+            <span class="footer-brand-meta">· Safe Ubuntu control plane &amp; Remote MCP Gateway</span>
           </div>
 
           <nav class="footer-links" aria-label="Footer">
-            <a href="#how">How it works</a>
-            <a href="#clients">Clients</a>
-            <a href="#install">Install</a>
+            <a href="#clients">MCP Clients</a>
+            <a href="#security">Safety &amp; Approvals</a>
+            <a href="#isolation">Container Isolation</a>
+            <a href="#install">Ubuntu Install</a>
             <a href="https://github.com/VPSAgent/vpsagent" target="_blank" rel="noopener noreferrer">GitHub</a>
             <a href="https://github.com/VPSAgent/vpsagent/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">AGPL-3.0 License</a>
-            <!-- TODO(diego): SGDev YouTube URL -->
-            <a href="#">SGDev</a>
-            <!-- TODO(diego): replace contact email -->
-            <a href="mailto:diego@example.com">Contact</a>
           </nav>
         </div>
       </footer>

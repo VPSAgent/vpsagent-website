@@ -1,14 +1,14 @@
 # VPSAgent Website
 
-Official static marketing website for **VPSAgent** ("Your coding agent's own VPS. Paste one link into Claude Code, and it deploys.").
+Official static marketing website for **VPSAgent** ("Give your AI agent a $5 VPS, safely.").
 
 ## Files
 
-- `index.html` — Marketing page sections, interactive 4-tab dashboard preview, demo slot, MCP client workbench, tool catalog, approval gate simulator, install guide, and early access form
-- `styles.css` — Deep obsidian-emerald architectural grid theme (`#050908` + `#10b981`) with self-hosted `@font-face` rules and responsive layout
-- `main.js` — Vanilla JS: ARIA tabs helper, interactive 4-tab dashboard preview, agent activity line, click-to-load YouTube demo embed, MCP client snippet switcher, approval gate simulator, install switcher, and copy helpers
-- `fonts/` — Self-hosted Space Grotesk and JetBrains Mono WOFF2 subsets plus OFL license texts
-- `favicon.svg` & `icons/` — Terminal brand mark and supported MCP client logos
+- `index.html` — Marketing page sections, interactive 4-tab sidebar dashboard preview, MCP client workbench, zero-root pipeline, and live action gate
+- `styles.css` — H4 White-on-Black monochrome architectural theme (`#0B0B0B` + `#FFFFFF`) with self-hosted `@font-face` rules and responsive layout
+- `main.js` — Interactive 4-tab dashboard preview, ARIA tabs helper, MCP client snippet switcher, live safety gate simulator, and copy helpers
+- `fonts/` — Self-hosted IBM Plex Sans, IBM Plex Mono, and Saira Semi Condensed WOFF2 subsets plus OFL license texts
+- `favicon.svg` & `icons/` — Pixel-V brand mark (large halftone + small lattice) and supported AI MCP client logos
 - `share.jpg` — Open Graph social preview card
 - `Dockerfile`, `Caddyfile.container`, `docker-compose.yml` — Static Caddy container deployment setup (listens on port `8080`)
 
