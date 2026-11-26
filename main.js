@@ -1,7 +1,7 @@
 "use strict";
 
 (function () {
-  // 1. Sticky navbar background separation on scroll
+  // 1. Sticky navbar background separation on scroll + mobile menu close on anchor click
   var nav = document.getElementById("site-nav");
   if (nav) {
     var updateNav = function () {
@@ -9,6 +9,15 @@
     };
     updateNav();
     window.addEventListener("scroll", updateNav, { passive: true });
+
+    var navMenu = nav.querySelector(".nav-menu");
+    if (navMenu) {
+      Array.from(navMenu.querySelectorAll("a")).forEach(function (link) {
+        link.addEventListener("click", function () {
+          navMenu.removeAttribute("open");
+        });
+      });
+    }
   }
 
   // Clipboard helper
@@ -48,7 +57,65 @@
     document.body.removeChild(ta);
   }
 
+  // Shared ARIA tabs helper (roving tabindex + ArrowLeft/ArrowRight/Home/End)
+  function initTabs(listEl, onSelect) {
+    if (!listEl) return null;
+    var tabs = Array.from(listEl.querySelectorAll('[role="tab"]'));
+    if (!tabs.length) return null;
+
+    function activate(tab, shouldFocus) {
+      tabs.forEach(function (t) {
+        var active = t === tab;
+        t.setAttribute("aria-selected", active ? "true" : "false");
+        t.setAttribute("tabindex", active ? "0" : "-1");
+      });
+      var panelId = tab.getAttribute("aria-controls");
+      if (panelId && tab.id) {
+        var panel = document.getElementById(panelId);
+        if (panel) panel.setAttribute("aria-labelledby", tab.id);
+      }
+      if (shouldFocus) tab.focus();
+      if (onSelect) onSelect(tab, tabs);
+    }
+
+    tabs.forEach(function (tab, idx) {
+      var isSelected = tab.getAttribute("aria-selected") === "true";
+      tab.setAttribute("tabindex", isSelected ? "0" : "-1");
+
+      tab.addEventListener("click", function () {
+        activate(tab, false);
+      });
+
+      tab.addEventListener("keydown", function (e) {
+        var isVertical = listEl.getAttribute("aria-orientation") === "vertical";
+        var nextIdx = null;
+        if (e.key === "ArrowRight" || (isVertical && e.key === "ArrowDown")) {
+          nextIdx = (idx + 1) % tabs.length;
+        } else if (e.key === "ArrowLeft" || (isVertical && e.key === "ArrowUp")) {
+          nextIdx = (idx - 1 + tabs.length) % tabs.length;
+        } else if (e.key === "Home") {
+          nextIdx = 0;
+        } else if (e.key === "End") {
+          nextIdx = tabs.length - 1;
+        }
+        if (nextIdx === null) return;
+        e.preventDefault();
+        activate(tabs[nextIdx], true);
+      });
+    });
+
+    return {
+      activateByAttr: function (attr, value) {
+        var match = tabs.find(function (t) {
+          return t.getAttribute(attr) === value;
+        });
+        if (match) activate(match, false);
+      },
+    };
+  }
+
   // 2. Hero one-line install copy button
+  // TODO(diego): switch to the v2.0.0-alpha.1 tag URL once the tag exists and install.sh defaults VPSAGENT_REPO_REF to it
   var ONE_LINE_INSTALL =
     "curl -fsSL https://raw.githubusercontent.com/VPSAgent/vpsagent/main/bootstrap/install.sh | sudo bash";
   var heroCopyBtn = document.getElementById("hero-copy-btn");
@@ -59,32 +126,42 @@
     });
   }
 
-  // 3. Interactive Dashboard Tab Switcher & Approval Demo
-  var dashTabs = Array.from(document.querySelectorAll("[data-dash-tab]"));
-  var dashPanels = Array.from(document.querySelectorAll("[data-dash-panel]"));
-
-  function activateDashTab(tabId) {
-    dashTabs.forEach(function (btn) {
-      var active = btn.getAttribute("data-dash-tab") === tabId;
-      btn.setAttribute("aria-selected", active ? "true" : "false");
-    });
-    dashPanels.forEach(function (panel) {
-      var match = panel.getAttribute("data-dash-panel") === tabId;
-      panel.hidden = !match;
-    });
+  // 2b. Overview panel agent activity line (runs once on load; static when reduced motion)
+  var activityEl = document.getElementById("dash-activity-text");
+  var reduceMotion =
+    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var activityTimers = [];
+  function clearActivityTimers() {
+    while (activityTimers.length) clearTimeout(activityTimers.pop());
+  }
+  if (activityEl && !reduceMotion) {
+    activityEl.textContent = "deploy_app(analytics-api)";
+    activityTimers.push(
+      setTimeout(function () {
+        activityEl.textContent = "deploy_app(analytics-api) → building…";
+      }, 900)
+    );
+    activityTimers.push(
+      setTimeout(function () {
+        activityEl.textContent =
+          "deploy_app(analytics-api) → live at https://analytics.yourdomain.com";
+      }, 2100)
+    );
   }
 
-  dashTabs.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var id = btn.getAttribute("data-dash-tab");
-      if (id) activateDashTab(id);
+  // 3. Interactive Dashboard Tab Switcher & Approval Demo
+  var dashPanels = Array.from(document.querySelectorAll("[data-dash-panel]"));
+  var dashTabCtrl = initTabs(document.querySelector(".dash-tabs"), function (tab) {
+    var tabId = tab.getAttribute("data-dash-tab");
+    dashPanels.forEach(function (panel) {
+      panel.hidden = panel.getAttribute("data-dash-panel") !== tabId;
     });
   });
 
   Array.from(document.querySelectorAll("[data-jump-tab]")).forEach(function (btn) {
     btn.addEventListener("click", function () {
       var id = btn.getAttribute("data-jump-tab");
-      if (id) activateDashTab(id);
+      if (id && dashTabCtrl) dashTabCtrl.activateByAttr("data-dash-tab", id);
     });
   });
 
@@ -99,45 +176,61 @@
   var dashRejectBtn = document.getElementById("dash-reject-btn");
 
   function setDashApprovalState(state) {
-    if (!dashApprovalItem || !dashApprovalMeta || !dashApprovalDesc || !dashApprovalActions || !dashBadge || !dashResetDemo) {
+    if (
+      !dashApprovalItem ||
+      !dashApprovalMeta ||
+      !dashApprovalDesc ||
+      !dashApprovalActions ||
+      !dashBadge ||
+      !dashResetDemo
+    ) {
       return;
     }
+    clearActivityTimers();
     if (state === "pending") {
       dashApprovalItem.style.borderColor = "";
       dashApprovalItem.style.borderLeftColor = "";
       dashApprovalMeta.style.color = "";
-      dashApprovalMeta.textContent = "Pending · deploy_app · Claude Code (ask-first pass)";
+      dashApprovalMeta.textContent = "Pending · deploy_app · Claude Code (Ask Me First)";
       dashApprovalDesc.innerHTML =
-        "Build <strong>analytics-api</strong> from Dockerfile, allocate isolated bridge network, bind <code>analytics.yourdomain.com</code>, and redact 4 secret env keys from logs.";
+        "Build <strong>analytics-api</strong> from its Dockerfile, add a private Postgres 16, and serve it on <code>analytics.yourdomain.com</code>.";
       dashApprovalActions.hidden = false;
       dashBadge.textContent = "1";
       dashBadge.classList.remove("is-zero");
       dashResetDemo.hidden = true;
       if (dashOverviewAlert) dashOverviewAlert.hidden = false;
+      if (activityEl) activityEl.textContent = "deploy_app(analytics-api) → waiting for approval";
     } else if (state === "approved") {
       dashApprovalItem.style.borderColor = "rgba(16, 185, 129, 0.35)";
       dashApprovalItem.style.borderLeftColor = "#10b981";
       dashApprovalMeta.style.color = "#34d399";
-      dashApprovalMeta.textContent = "Approved · Executed via /run/vpsagent/runtime-bridge.sock";
+      dashApprovalMeta.textContent = "Approved · Deploy started";
       dashApprovalDesc.innerHTML =
-        "<strong>analytics-api</strong> built cleanly and started with <code>cap_drop: ALL</code> on <code>https://analytics.yourdomain.com</code>.";
+        "<strong>analytics-api</strong> is live on <code>https://analytics.yourdomain.com</code>.";
       dashApprovalActions.hidden = true;
       dashBadge.textContent = "0";
       dashBadge.classList.add("is-zero");
       dashResetDemo.hidden = false;
       if (dashOverviewAlert) dashOverviewAlert.hidden = true;
+      if (activityEl) {
+        activityEl.textContent =
+          "deploy_app(analytics-api) → live at https://analytics.yourdomain.com";
+      }
     } else if (state === "rejected") {
       dashApprovalItem.style.borderColor = "rgba(251, 113, 133, 0.35)";
       dashApprovalItem.style.borderLeftColor = "#fb7185";
       dashApprovalMeta.style.color = "#fb7185";
-      dashApprovalMeta.textContent = "Rejected · Blocked before container build";
+      dashApprovalMeta.textContent = "Rejected · Nothing was changed";
       dashApprovalDesc.innerHTML =
-        "Denied <strong>analytics-api</strong> deployment request. No Docker image or Caddy route was modified.";
+        "Rejected <strong>analytics-api</strong> deployment request. Nothing was changed.";
       dashApprovalActions.hidden = true;
       dashBadge.textContent = "0";
       dashBadge.classList.add("is-zero");
       dashResetDemo.hidden = false;
       if (dashOverviewAlert) dashOverviewAlert.hidden = true;
+      if (activityEl) {
+        activityEl.textContent = "deploy_app(analytics-api) → rejected · nothing was changed";
+      }
     }
   }
 
@@ -154,6 +247,23 @@
   if (dashResetDemo) {
     dashResetDemo.addEventListener("click", function () {
       setDashApprovalState("pending");
+    });
+  }
+
+  // 3b. Demo slot click-to-load YouTube embed
+  var demoSlot = document.querySelector(".demo-slot");
+  var ytId = demoSlot ? (demoSlot.getAttribute("data-youtube-id") || "").trim() : "";
+  if (demoSlot && ytId) {
+    demoSlot.innerHTML =
+      '<button type="button" class="demo-poster-btn" aria-label="Play demo video">' +
+      '<img class="demo-poster" src="https://i.ytimg.com/vi/' + encodeURIComponent(ytId) + '/hqdefault.jpg" alt="" loading="lazy" />' +
+      '<span class="demo-poster-play" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v14l11-7-11-7z"/></svg></span>' +
+      "</button>";
+    demoSlot.querySelector(".demo-poster-btn").addEventListener("click", function () {
+      demoSlot.innerHTML =
+        '<iframe class="demo-iframe" src="https://www.youtube-nocookie.com/embed/' +
+        encodeURIComponent(ytId) +
+        '?autoplay=1" title="VPSAgent demo video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
     });
   }
 
@@ -198,26 +308,20 @@
   };
 
   var currentClient = "claude";
-  var wbTabs = Array.from(document.querySelectorAll("[data-client]"));
   var wbFile = document.getElementById("wb-file");
   var wbCode = document.getElementById("wb-code");
   var wbTransport = document.getElementById("wb-transport");
   var wbCopyBtn = document.getElementById("wb-copy-btn");
   var wbCopyLabel = document.getElementById("wb-copy-label");
 
-  wbTabs.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var id = btn.getAttribute("data-client");
-      if (!id || !CLIENT_SNIPPETS[id]) return;
-      currentClient = id;
-      wbTabs.forEach(function (t) {
-        t.setAttribute("aria-selected", t === btn ? "true" : "false");
-      });
-      var item = CLIENT_SNIPPETS[id];
-      if (wbFile) wbFile.textContent = item.file;
-      if (wbCode) wbCode.textContent = item.code;
-      if (wbTransport) wbTransport.textContent = item.transport;
-    });
+  initTabs(document.querySelector(".workbench-tabs"), function (btn) {
+    var id = btn.getAttribute("data-client");
+    if (!id || !CLIENT_SNIPPETS[id]) return;
+    currentClient = id;
+    var item = CLIENT_SNIPPETS[id];
+    if (wbFile) wbFile.textContent = item.file;
+    if (wbCode) wbCode.textContent = item.code;
+    if (wbTransport) wbTransport.textContent = item.transport;
   });
 
   if (wbCopyBtn) {
@@ -230,25 +334,25 @@
   var GATE_SCENARIOS = {
     deploy: {
       title: "deploy_app · billing-api",
-      sub: "Requested by Claude Code · Scope: Ask Me First",
+      sub: "Requested by Claude Code · Pass: Ask Me First",
       statusText: "Waiting for approval",
       statusClass: "dash-status-cell--warn",
       note: "Recorded in built-in SQLite WAL audit log",
       interactive: true,
       rows: [
         ["Source", "github.com/acme/billing (Dockerfile build)"],
-        ["Container policy", "cap_drop: ALL · no-new-privileges · 0 docker.sock"],
-        ["Resource limits", "0.5 vCPU · 512m RAM · Private Postgres 16"],
+        ["Resources", "0.5 vCPU · 512 MB RAM"],
+        ["Database", "Private Postgres 16"],
         ["Public route", "https://billing.yourdomain.com (Caddy Auto-TLS)"],
       ],
-      approvedStatus: "Approved · Shipped via Runtime Bridge",
-      approvedNote: "Built & started on private bridge network",
-      rejectedStatus: "Rejected · Container not created",
-      rejectedNote: "Denied by owner · Bridge call skipped",
+      approvedStatus: "Approved · Deploying",
+      approvedNote: "Your agent gets the live URL when it's up",
+      rejectedStatus: "Rejected · Not deployed",
+      rejectedNote: "Rejected by you · Your agent is told why",
     },
     env: {
       title: "update_app_env · api-billing",
-      sub: "Requested by Cursor · Scope: Ask Me First (app-locked)",
+      sub: "Requested by Cursor · Pass: Ask Me First (app-locked)",
       statusText: "Waiting for approval",
       statusClass: "dash-status-cell--warn",
       note: "Secret values are encrypted at rest and redacted in logs",
@@ -256,7 +360,7 @@
       rows: [
         ["Target app", "api-billing (locked to visitor pass)"],
         ["Updated keys", "STRIPE_WEBHOOK_SECRET=[REDACTED]"],
-        ["Storage", "Encrypted in node:sqlite (WAL mode)"],
+        ["Storage", "Encrypted at rest"],
         ["MCP response", "Confirmation only, secret value never echoed"],
       ],
       approvedStatus: "Approved · Encrypted & reloaded",
@@ -264,24 +368,27 @@
       rejectedStatus: "Rejected · Environment unchanged",
       rejectedNote: "Existing encrypted secrets preserved",
     },
-    blocked: {
-      title: "host_command · rm -rf /var/lib/docker",
-      sub: "Attempted over MCP · Blocked automatically before queue",
-      statusText: "Denied by bridge allowlist",
-      statusClass: "dash-status-cell--danger",
-      note: "Runtime Bridge rejects arbitrary shell commands by design",
-      interactive: false,
+    host: {
+      title: "run_host_command · apt list --upgradable",
+      sub: "Requested by Claude Code · Pass: Ask Me First",
+      statusText: "Waiting for your OK",
+      statusClass: "dash-status-cell--warn",
+      note: "Server commands wait for you on every pass except Full Server Admin",
+      interactive: true,
       rows: [
-        ["Bridge socket", "/run/vpsagent/runtime-bridge.sock"],
-        ["Policy check", "Command not in strict allowlist"],
-        ["Docker socket", "Not mounted in core containers"],
-        ["Audit event", "Logged as blocked attempt with key prefix"],
+        ["Command", "apt list --upgradable"],
+        ["Runs on", "Your VPS host"],
+        ["Output", "Returned to your agent and saved in history"],
+        ["Timeout", "30 s (max 180 s)"],
       ],
+      approvedStatus: "Approved · Ran on host",
+      approvedNote: "Output sent back to Claude Code",
+      rejectedStatus: "Rejected · Not run",
+      rejectedNote: "Your agent is told you said no",
     },
   };
 
   var activeScenario = "deploy";
-  var gateBtns = Array.from(document.querySelectorAll("[data-scenario]"));
   var gateTitle = document.getElementById("gate-title");
   var gateSub = document.getElementById("gate-sub");
   var gateStatus = document.getElementById("gate-status");
@@ -301,10 +408,6 @@
     var sc = GATE_SCENARIOS[id];
     if (!sc) return;
     activeScenario = id;
-
-    gateBtns.forEach(function (b) {
-      b.setAttribute("aria-selected", b.getAttribute("data-scenario") === id ? "true" : "false");
-    });
 
     if (gateTitle) gateTitle.textContent = sc.title;
     if (gateSub) gateSub.textContent = sc.sub;
@@ -331,11 +434,9 @@
     }
   }
 
-  gateBtns.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var id = btn.getAttribute("data-scenario");
-      if (id) renderScenario(id);
-    });
+  initTabs(document.querySelector(".gate-scenarios"), function (btn) {
+    var id = btn.getAttribute("data-scenario");
+    if (id) renderScenario(id);
   });
 
   if (gateApprove) {
@@ -364,22 +465,16 @@
   };
   var currentMode = "curl";
   var termCmd = document.getElementById("term-cmd");
-  var modeBtns = Array.from(document.querySelectorAll("[data-install-mode]"));
   var termCopyBtn = document.getElementById("term-copy-btn");
   var termCopyLabel = document.getElementById("term-copy-label");
 
-  modeBtns.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var mode = btn.getAttribute("data-install-mode");
-      if (!mode || !INSTALL_CMDS[mode]) return;
-      currentMode = mode;
-      modeBtns.forEach(function (b) {
-        b.setAttribute("aria-selected", b === btn ? "true" : "false");
-      });
-      if (termCmd) {
-        termCmd.textContent = INSTALL_CMDS[mode];
-      }
-    });
+  initTabs(document.querySelector(".install-modes"), function (btn) {
+    var mode = btn.getAttribute("data-install-mode");
+    if (!mode || !INSTALL_CMDS[mode]) return;
+    currentMode = mode;
+    if (termCmd) {
+      termCmd.textContent = INSTALL_CMDS[mode];
+    }
   });
 
   if (termCopyBtn) {

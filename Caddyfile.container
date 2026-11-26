@@ -6,5 +6,13 @@
 :8080 {
 	root * /srv
 	encode zstd gzip
+
+	@static path /icons/* /fonts/* /share.jpg /favicon.svg
+	header @static Cache-Control "public, max-age=31536000, immutable"
+	header /*.html Cache-Control "public, max-age=300"
+	header / Cache-Control "public, max-age=300"
+	header /*.css Cache-Control "public, max-age=3600"
+	header /*.js Cache-Control "public, max-age=3600"
+
 	file_server
 }
