@@ -1237,7 +1237,7 @@ pre {
   text-align: center;
   padding: var(--s-5);
   position: relative;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .demo-placeholder {
@@ -2155,6 +2155,38 @@ pre {
 
 /* Responsive */
 @media (max-width: 960px) {
+  .nav-inner {
+    padding: 14px 20px;
+    gap: 12px;
+  }
+
+  .nav-left {
+    gap: 8px;
+  }
+
+  .nav-brand-name {
+    font-size: 1rem;
+  }
+
+  .nav-right {
+    gap: 2px;
+  }
+
+  .nav-link {
+    padding: 6px 7px;
+    font-size: 0.8125rem;
+  }
+
+  .nav-github {
+    padding: 0 7px;
+    font-size: 0.8125rem;
+  }
+
+  .nav-cta {
+    padding: 0 11px;
+    font-size: 0.8125rem;
+  }
+
   .how-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

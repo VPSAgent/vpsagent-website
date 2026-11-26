@@ -87,11 +87,17 @@
       });
 
       tab.addEventListener("keydown", function (e) {
+        var isVertical = listEl.getAttribute("aria-orientation") === "vertical";
         var nextIdx = null;
-        if (e.key === "ArrowRight") nextIdx = (idx + 1) % tabs.length;
-        else if (e.key === "ArrowLeft") nextIdx = (idx - 1 + tabs.length) % tabs.length;
-        else if (e.key === "Home") nextIdx = 0;
-        else if (e.key === "End") nextIdx = tabs.length - 1;
+        if (e.key === "ArrowRight" || (isVertical && e.key === "ArrowDown")) {
+          nextIdx = (idx + 1) % tabs.length;
+        } else if (e.key === "ArrowLeft" || (isVertical && e.key === "ArrowUp")) {
+          nextIdx = (idx - 1 + tabs.length) % tabs.length;
+        } else if (e.key === "Home") {
+          nextIdx = 0;
+        } else if (e.key === "End") {
+          nextIdx = tabs.length - 1;
+        }
         if (nextIdx === null) return;
         e.preventDefault();
         activate(tabs[nextIdx], true);
@@ -124,15 +130,23 @@
   var activityEl = document.getElementById("dash-activity-text");
   var reduceMotion =
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var activityTimers = [];
+  function clearActivityTimers() {
+    while (activityTimers.length) clearTimeout(activityTimers.pop());
+  }
   if (activityEl && !reduceMotion) {
     activityEl.textContent = "deploy_app(analytics-api)";
-    setTimeout(function () {
-      activityEl.textContent = "deploy_app(analytics-api) → building…";
-    }, 900);
-    setTimeout(function () {
-      activityEl.textContent =
-        "deploy_app(analytics-api) → live at https://analytics.yourdomain.com";
-    }, 2100);
+    activityTimers.push(
+      setTimeout(function () {
+        activityEl.textContent = "deploy_app(analytics-api) → building…";
+      }, 900)
+    );
+    activityTimers.push(
+      setTimeout(function () {
+        activityEl.textContent =
+          "deploy_app(analytics-api) → live at https://analytics.yourdomain.com";
+      }, 2100)
+    );
   }
 
   // 3. Interactive Dashboard Tab Switcher & Approval Demo
@@ -172,6 +186,7 @@
     ) {
       return;
     }
+    clearActivityTimers();
     if (state === "pending") {
       dashApprovalItem.style.borderColor = "";
       dashApprovalItem.style.borderLeftColor = "";
@@ -184,6 +199,7 @@
       dashBadge.classList.remove("is-zero");
       dashResetDemo.hidden = true;
       if (dashOverviewAlert) dashOverviewAlert.hidden = false;
+      if (activityEl) activityEl.textContent = "deploy_app(analytics-api) → waiting for approval";
     } else if (state === "approved") {
       dashApprovalItem.style.borderColor = "rgba(16, 185, 129, 0.35)";
       dashApprovalItem.style.borderLeftColor = "#10b981";
@@ -196,6 +212,10 @@
       dashBadge.classList.add("is-zero");
       dashResetDemo.hidden = false;
       if (dashOverviewAlert) dashOverviewAlert.hidden = true;
+      if (activityEl) {
+        activityEl.textContent =
+          "deploy_app(analytics-api) → live at https://analytics.yourdomain.com";
+      }
     } else if (state === "rejected") {
       dashApprovalItem.style.borderColor = "rgba(251, 113, 133, 0.35)";
       dashApprovalItem.style.borderLeftColor = "#fb7185";
@@ -208,6 +228,9 @@
       dashBadge.classList.add("is-zero");
       dashResetDemo.hidden = false;
       if (dashOverviewAlert) dashOverviewAlert.hidden = true;
+      if (activityEl) {
+        activityEl.textContent = "deploy_app(analytics-api) → rejected · nothing was changed";
+      }
     }
   }
 
